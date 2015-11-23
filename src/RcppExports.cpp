@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // pNorm1D
 SEXP pNorm1D(NumericVector x, double mean, double sd);
-RcppExport SEXP mdpPricePigIT_pNorm1D(SEXP xSEXP, SEXP meanSEXP, SEXP sdSEXP) {
+RcppExport SEXP hmdpPricePigIT_pNorm1D(SEXP xSEXP, SEXP meanSEXP, SEXP sdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -21,7 +21,7 @@ END_RCPP
 }
 // pNorm2D_arma
 double pNorm2D_arma(arma::vec lower, arma::vec upper, arma::vec mean, arma::mat sigma);
-RcppExport SEXP mdpPricePigIT_pNorm2D_arma(SEXP lowerSEXP, SEXP upperSEXP, SEXP meanSEXP, SEXP sigmaSEXP) {
+RcppExport SEXP hmdpPricePigIT_pNorm2D_arma(SEXP lowerSEXP, SEXP upperSEXP, SEXP meanSEXP, SEXP sigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -35,7 +35,7 @@ END_RCPP
 }
 // pNorm2D
 double pNorm2D(NumericVector lower, NumericVector upper, NumericVector mean, NumericMatrix sigma);
-RcppExport SEXP mdpPricePigIT_pNorm2D(SEXP lowerSEXP, SEXP upperSEXP, SEXP meanSEXP, SEXP sigmaSEXP) {
+RcppExport SEXP hmdpPricePigIT_pNorm2D(SEXP lowerSEXP, SEXP upperSEXP, SEXP meanSEXP, SEXP sigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -49,7 +49,7 @@ END_RCPP
 }
 // BuildHMDP2
 SEXP BuildHMDP2(const CharacterVector filePrefix, const List param, const List paramDLMP, const List paramDLMPi, const List paramDLMF, const List paramPolicy);
-RcppExport SEXP mdpPricePigIT_BuildHMDP2(SEXP filePrefixSEXP, SEXP paramSEXP, SEXP paramDLMPSEXP, SEXP paramDLMPiSEXP, SEXP paramDLMFSEXP, SEXP paramPolicySEXP) {
+RcppExport SEXP hmdpPricePigIT_BuildHMDP2(SEXP filePrefixSEXP, SEXP paramSEXP, SEXP paramDLMPSEXP, SEXP paramDLMPiSEXP, SEXP paramDLMFSEXP, SEXP paramPolicySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -65,7 +65,7 @@ END_RCPP
 }
 // SimulatePigs
 List SimulatePigs(const int& pigs, const int& samples, const int& weeks, const arma::vec& prices, const arma::mat& V, const arma::mat& B, const arma::mat& R);
-RcppExport SEXP mdpPricePigIT_SimulatePigs(SEXP pigsSEXP, SEXP samplesSEXP, SEXP weeksSEXP, SEXP pricesSEXP, SEXP VSEXP, SEXP BSEXP, SEXP RSEXP) {
+RcppExport SEXP hmdpPricePigIT_SimulatePigs(SEXP pigsSEXP, SEXP samplesSEXP, SEXP weeksSEXP, SEXP pricesSEXP, SEXP VSEXP, SEXP BSEXP, SEXP RSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;

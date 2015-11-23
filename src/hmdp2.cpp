@@ -306,7 +306,12 @@ SEXP HMDP2::BuildL1Process(int & iFeed) {
                                   CalcTransPrCont(iTP,iSP,iFeed,iSF,iSPi,n,s);
                                   weights.assign(2,0);
                                   cull=0;
-                                  weights[0]=1;
+                                  if(s==1){
+                                    weights[0] = tStartMarketing - 1;
+                                  }
+                                  if(s!=1){
+                                    weights[0] = 0;
+                                  }
                                   weights[1]=weightCull[s][cull][iTP][iFeed][n];
                                   w.Action(scope, index, pr, weights, "cont.", true);
                                }
@@ -408,7 +413,12 @@ SEXP HMDP2::BuildL1ProcessMPolicy(int & iFeed) {
                                   CalcTransPrCont(iTP,iSP,iFeed,iSF,iSPi,n,s);
                                   weights.assign(2,0);
                                   cull=0;
-                                  weights[0]=1;
+                                  if(s==1){
+                                    weights[0] = tStartMarketing - 1;
+                                  }
+                                  if(s!=1){
+                                    weights[0] = 0;
+                                  }
                                   weights[1]=weightCull[s][cull][iTP][iFeed][n];  //  Should we change reward function?
                                   w.Action(scope, index, pr, weights, "cont.", true);
                                }

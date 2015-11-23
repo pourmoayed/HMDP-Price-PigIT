@@ -39,7 +39,7 @@
 #' benchmark(testpnorm(), testpNorm1D(), order="relative", replications=100000)[,1:4]
 #' @export
 pNorm1D <- function(x, mean, sd) {
-    .Call('mdpPricePigIT_pNorm1D', PACKAGE = 'mdpPricePigIT', x, mean, sd)
+    .Call('hmdpPricePigIT_pNorm1D', PACKAGE = 'hmdpPricePigIT', x, mean, sd)
 }
 
 #' Bivariate cumulative normal (distribution function) using Armadillo
@@ -107,7 +107,7 @@ pNorm1D <- function(x, mean, sd) {
 #' benchmark(testPmvnorm(), testpNorm2D(), testpNorm2D_arma, order="relative", replications=10000)[,1:4]
 #' @export
 pNorm2D_arma <- function(lower, upper, mean, sigma) {
-    .Call('mdpPricePigIT_pNorm2D_arma', PACKAGE = 'mdpPricePigIT', lower, upper, mean, sigma)
+    .Call('hmdpPricePigIT_pNorm2D_arma', PACKAGE = 'hmdpPricePigIT', lower, upper, mean, sigma)
 }
 
 #' Bivariate cumulative normal (distribution function)
@@ -175,7 +175,7 @@ pNorm2D_arma <- function(lower, upper, mean, sigma) {
 #' benchmark(testPmvnorm(), testpNorm2D(), testpNorm2D_arma, order="relative", replications=10000)[,1:4]
 #' @export
 pNorm2D <- function(lower, upper, mean, sigma) {
-    .Call('mdpPricePigIT_pNorm2D', PACKAGE = 'mdpPricePigIT', lower, upper, mean, sigma)
+    .Call('hmdpPricePigIT_pNorm2D', PACKAGE = 'hmdpPricePigIT', lower, upper, mean, sigma)
 }
 
 #' Build the HMDP (2 levels with shared linking) using the C++ binary writer. 
@@ -190,10 +190,10 @@ pNorm2D <- function(lower, upper, mean, sigma) {
 #' @author Lars Relund \email{lars@@relund.dk}, Reza Pourmoayed \email{rpourmoayed@econ.au.dk}
 #' @export
 BuildHMDP2 <- function(filePrefix, param, paramDLMP, paramDLMPi, paramDLMF, paramPolicy) {
-    .Call('mdpPricePigIT_BuildHMDP2', PACKAGE = 'mdpPricePigIT', filePrefix, param, paramDLMP, paramDLMPi, paramDLMF, paramPolicy)
+    .Call('hmdpPricePigIT_BuildHMDP2', PACKAGE = 'hmdpPricePigIT', filePrefix, param, paramDLMP, paramDLMPi, paramDLMF, paramPolicy)
 }
 
 SimulatePigs <- function(pigs, samples, weeks, prices, V, B, R) {
-    .Call('mdpPricePigIT_SimulatePigs', PACKAGE = 'mdpPricePigIT', pigs, samples, weeks, prices, V, B, R)
+    .Call('hmdpPricePigIT_SimulatePigs', PACKAGE = 'hmdpPricePigIT', pigs, samples, weeks, prices, V, B, R)
 }
 

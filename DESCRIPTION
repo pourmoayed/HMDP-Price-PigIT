@@ -1,4 +1,4 @@
-Package: mdpPricePigIT
+Package: hmdpPricePigIT
 Type: Package
 Title: HMDP model with Bayesian updating for prices (PigIT project)
 Version: 0.1
