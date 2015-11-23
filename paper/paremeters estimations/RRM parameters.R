@@ -9,7 +9,7 @@
 #   
 #   save(pigWeighings,file = "data/pigWeighings")
   
-  load("data/pigWeighings")
+  load("pigWeighings")
   
    weights<-list()
    
