@@ -20,7 +20,7 @@ SEXP BuildHMDP2(const CharacterVector filePrefix, const List param, const List p
 ,const List paramPolicy) {
    string prefix = as<string>(filePrefix);
    HMDP2 Model(prefix, param, paramDLMP, paramDLMPi, paramDLMF, paramPolicy);
-   Rcout << "Total number of states: " << Model.countStatesHMDP() << endl;
+   //Rcout << "Total number of states: " << Model.countStatesHMDP() << endl;
    return( Model.BuildHMDP() );
    //return(wrap(0));
 }

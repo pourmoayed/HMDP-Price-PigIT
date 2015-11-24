@@ -1,4 +1,4 @@
-# HMDP-Price-PigIT
+# 
 
 This repository contains R package for coding a hierarchical Markov decision process in modelling marketing decision of growing/finishing pigs under price fluctuations. 
 The results are used in the paper "Slaughter pig marketing under price fluctuations"

@@ -14,7 +14,7 @@ if(givenPolicy){
 }
 
 param<-setParameters(tMax=15,
-                     pigs=5,
+                     pigs=15,
                      tStartMarketing=9,
                      meanWeights = weightMean,
                      sdWeights = weightSd,
