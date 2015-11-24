@@ -45,7 +45,7 @@ setParameters<-function(tMax=15,
                         cleaningPeriod=4,  # unit is day  
                         marketingLength=3, # unit is day
                         pigletLeadTime=1,  # unit is week
-                        modPolicy=TRUE,
+                        modPolicy=FALSE,
                         rewCull = list(),
                         feedWeek = matrix(),
                         feedCull = matrix(),
@@ -294,7 +294,14 @@ buildDLM<-function(iniDLM,param,Y){
 
 ####################################################################
 
-
+findIndex<-function(st,matDis){
+  hh<--1
+  for(i in 1:dim(matDis)[1]){
+    if( ( st>=matDis[i,2] ) & ( st<matDis[i,3] )  )
+      hh<-i-1;
+  }
+  return(hh);
+}
    
    
 

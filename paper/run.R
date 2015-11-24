@@ -7,20 +7,19 @@
 
 # remember to set the working dir til ./paper/
 library(hmdpPricePigIT)
-useScenariosPaper <- TRUE   # use the already simulated data?
+useScenariosPaper <- TRUE   # use the scenarios used in the paper
 if (!useSimPaper) {
-  message("Use a new simulation.")
+  message("Use new scenarios.")
   source("optimize_hmdp.R")   # find optimal policy
-  source("simulate.R")        # simulate the 3 pens (use optimal policy to identify feed-mix and number of pigs)
+  message("Define a time period with length 15 weeks using vectors startTime and endTime such that year number is in the fisrt element and the week number is in the last element of the vectors")
+  startTime <- c(2012,11) # specify the commencement time of the time period 
+  endTime<- c(2012,25) # specify the end time of the time period
+  source("scenario.R")        # simulate the 3 pens (use optimal policy to identify feed-mix and number of pigs)
 } else {
-  message("Use the data generated in the simulation_paper folder.")
-  pen1Weekly <- read.csv2("simulation_paper/pen1Weekly.csv")
-  pen1Daily <- read.csv2("simulation_paper/pen1Daily.csv")
-  pen2Weekly <- read.csv2("simulation_paper/pen2Weekly.csv")
-  pen2Daily <- read.csv2("simulation_paper/pen2Daily.csv")
-  pen3Weekly <- read.csv2("simulation_paper/pen3Weekly.csv")
-  pen3Daily <- read.csv2("simulation_paper/pen3Daily.csv")
+  message("Use the scenarios and the optimal actions generated in the scenarios_paper folder.")
+  datS1 <- read.csv2("scenarios_paper/datS1.csv")
+  datS2 <- read.csv2("scenarios_paper/datS2.csv")
+  datS3 <- read.csv2("scenarios_paper/datS3.csv")
 }
 source("plot.R", echo = TRUE)    # plot results as tex files
-tools::texi2pdf(file = "sim_plot.tex", clean = T)
-tools::texi2pdf(file = "opt_plot.tex", clean = T)
+tools::texi2pdf(file = "Scenarios_plot.tex", clean = T)

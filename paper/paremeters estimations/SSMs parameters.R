@@ -34,7 +34,7 @@ buildDLMPig <- function(x){
 }
 
 Param <- dlmMLE ( finisher  , parm=rep (1, 1), buildDLMPig)#, method="Nelder-Mead" )
-exp(Param$par)
+#exp(Param$par)
 
 dlmPig <- buildDLMPig(Param$par)
 
@@ -62,7 +62,7 @@ buildDLMFeed <- function(x){
 }
 
 Param <- dlmMLE ( dataFeed, parm=rep (1, 2), buildDLMFeed) #, method="Nelder-Mead" )
-exp(Param$par)
+#exp(Param$par)
 
 dlmFeed <- buildDLMFeed(Param$par)
 
@@ -88,7 +88,7 @@ buildDLMPiglet <- function(x){
 }
 
 Param <- dlmMLE ( dataPiglet, parm=rep (1, 2), buildDLMPiglet) #, method="Nelder-Mead" )
-exp(Param$par)
+#exp(Param$par)
 
 dlmPiglet <- buildDLMPiglet(Param$par)
 

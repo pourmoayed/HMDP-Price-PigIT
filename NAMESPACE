@@ -1,5 +1,7 @@
 export(BuildHMDP2)
 export(SimulatePigs)
+export(optimalSearch)
+export(findIndex)
 export(buildDLM)
 export(paramDLMs)
 export(pNorm1D)

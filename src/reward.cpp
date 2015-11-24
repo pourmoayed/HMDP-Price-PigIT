@@ -60,7 +60,6 @@ List SimulatePigs(const int & pigs, const int & samples, const int & weeks, cons
     randEff =   randn<mat>(pigs,V.n_cols) * chol(V);
     randEffSample.slice(s) = randEff.t(); 
     }
-
   
   double muT, muN; // mu_t and next mean mu_t+1
   double sdT, sdN;
