@@ -1,13 +1,17 @@
 Package: hmdpPricePigIT
 Type: Package
-Title: HMDP model with Bayesian updating for prices (PigIT project)
-Version: 0.1
-Date: 2015-03-18
-Author: Lars Relund <lars@relund.dk> and Reza Pourmoayed <rpourmoayed@econ.au.dk>
-Maintainer: Reza Pourmoayed <rpourmoayed@econ.au.dk>
-Description: This package include tools used during the PigIT project
-    \url{www.pigit.net}.
-License: GPL (>= 2)
+Title: Slaughter pig marketing under price fluctuations
+Version: 1.0
+Date: 2015-12-01
+Authors@R: c( 
+  person("Lars", "Relund", email = "lars@relund.dk", role = c("aut") ), 
+  person("Reza", "Pourmoayed", email = "rpourmoayed@econ.au.dk", role = c("aut", "cre") ) 
+  )
+URL: https://github.com/pourmoayed/hmdpPricePigIT
+BugReports: https://github.com/pourmoayed/hmdpPricePigIT/issues
+Description: This package include code and data to build and solve the model. 
+    The model is developed under the PigIT project \url{www.pigit.net}.
+License: GPL (>3)
 Depends:
     R (>= 3.0.0),
     MDP2
