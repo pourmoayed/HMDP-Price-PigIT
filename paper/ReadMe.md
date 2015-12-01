@@ -5,5 +5,5 @@ This folder contains the required source files to run the HMDP example in the pa
 Note: 
 - To caculate the value of price information for a specific price setting, use the files in folder "policy evaluation". 
 
-- To access to the data of three scenarios, use folder "scenario_papers"
+- To access to the data of the three scenarios, use folder "scenario_papers"
 
