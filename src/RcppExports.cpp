@@ -64,7 +64,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // SimulatePigs
-List SimulatePigs(const int& pigs, const int& samples, const int& weeks, const arma::vec& prices, const arma::mat& V, const arma::mat& B, const arma::mat& R);
+SEXP SimulatePigs(const int& pigs, const int& samples, const int& weeks, const arma::vec& prices, const arma::mat& V, const arma::mat& B, const arma::mat& R);
 RcppExport SEXP hmdpPricePigIT_SimulatePigs(SEXP pigsSEXP, SEXP samplesSEXP, SEXP weeksSEXP, SEXP pricesSEXP, SEXP VSEXP, SEXP BSEXP, SEXP RSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;

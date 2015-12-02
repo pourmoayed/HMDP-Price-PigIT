@@ -5,7 +5,7 @@
 ## 2) Create data for the 3 scenarios (stored in 3 csv files)
 ## 3) Plot the results (stored in pdf files)
 
-# remember to set the working dir til ./paper/
+# remember to set the working dir to ../paper/
 library(hmdpPricePigIT)
 useScenariosPaper <- FALSE   # use the scenarios used in the paper
 if (!useScenariosPaper){

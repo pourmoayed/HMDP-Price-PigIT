@@ -22,7 +22,6 @@ HMDP2::HMDP2(const string prefix, const List param, const List paramDLMP, const 
    avgInsWeight = as<double>(rParam["avgInsWeight"]);
    avgInsSd = as<double>(rParam["avgInsSd"]);
    convRateSd = as<double>(rParam["convRateSd"]);
-   coefPiglet = as<double>(rParam["coefPiglet"]);   
    meanWeights = as<arma::vec>(rParam["meanWeights"]);      
    sdWeights = as<arma::vec>(rParam["sdWeights"]);
    meanGrowth = as<arma::vec>(rParam["meanGrowth"]);      
@@ -121,7 +120,7 @@ HMDP2::HMDP2(const string prefix, const List param, const List paramDLMP, const 
      List rParamPolicy(paramPolicy);
      int dim =rParamPolicy.size();
      int rowNum,n,k;
-     for (int i=0;i<dim;i++) {
+     for ( int i=0;i<dim;i++) {
      NumericMatrix tmp = as<NumericMatrix>(rParamPolicy[i]);
      n = tmp.nrow(), k = tmp.ncol();
      mPolicy.push_back( arma::mat(tmp.begin(), n, k, true) );
@@ -129,7 +128,7 @@ HMDP2::HMDP2(const string prefix, const List param, const List paramDLMP, const 
   //replace the action for the state that the deviations are not zero, should we consider iMTF in replacing (variation in feed price)?   
       cpuTime.Reset(0); cpuTime.StartTime(0);
       for (int i=0;i<dim;i++){
-        for(int j=0;j<mPolicy[i].n_rows ;j++){
+        for(unsigned int j=0;j<mPolicy[i].n_rows ;j++){
                  if( (mPolicy[i](j,1)!=iMTP) || (mPolicy[i](j,2)!=iMSP)  || (mPolicy[i](j,3)!=iMTF) ||  (mPolicy[i](j,4)!=iMSF) || (mPolicy[i](j,5)!=iMSPi) ){
                    rowNum = findIndice(mPolicy[iMTF], iMTP, iMSP, iMTF, iMSF, iMSPi, mPolicy[i](j,6) , mPolicy[i](j,7) ); 
                    mPolicy[i](j,0)=mPolicy[iMTF](rowNum,0);                   
@@ -157,7 +156,7 @@ SEXP HMDP2::BuildHMDP() {
    
   //DBG4("specified weight value is: "<<weightCull[2][3][1][1][1][1][5]<<endl)  //weightCull[s][cull][iTP][iTF][iW][iSd][n]
       
-   int currentT, n, cull, iTP, iTF, iSP, iSF, iSPi, iTPt, iTFt, iSPit;
+   int currentT, n, iTP, iTF, iSP, iSF, iSPi, iTPt, iTFt, iSPit;
    
    for(iTF=0; iTF<sizeSTF; iTF++){
    if(modPolicy)

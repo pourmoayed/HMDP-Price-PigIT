@@ -1,8 +1,6 @@
 #include "cumNorm.h"
 
 
-
-
 //' Univariate cumulative normal (distribution function)
 //' 
 //' Based on the paper "Better approximations to cumulative normal functions" by 
@@ -14,31 +12,6 @@
 //' @param sd The standard deviation.
 //' @return The distribution function.
 //' @author Lars Relund \email{lars@@relund.dk}
-//' @examples
-//' # test against pnorm
-//' times<-500
-//' x<-runif(times,-10,10)
-//' mean<-0
-//' sd<-3
-//' diff<-abs(pnorm(x,mean,sd)-pNorm1D(x,mean,sd))
-//' if (all(diff<1e-15)) cat("No problems")
-//' 
-//' # compare performance
-//' testpnorm<-function() {
-//'    x<-runif(1,-10,10)
-//'    mean<-runif(1,-10,10)
-//'    sd<-runif(1,0,5)
-//'    pnorm(x,mean,sd)
-//' }
-//' testpNorm1D<-function() {
-//'    x<-runif(1,-10,10)
-//'    mean<-runif(1,-10,10)
-//'    sd<-runif(1,0,5)
-//'    pNorm1D(x,mean,sd)
-//' }
-//' 
-//' require(rbenchmark)
-//' benchmark(testpnorm(), testpNorm1D(), order="relative", replications=100000)[,1:4]
 //' @export
 // [[Rcpp::export]]
 SEXP pNorm1D(NumericVector x, double mean, double sd) {
@@ -49,12 +22,6 @@ SEXP pNorm1D(NumericVector x, double mean, double sd) {
    }
    return out;
 }
-
-
-
-
-
-
 
 
 //' Bivariate cumulative normal (distribution function) using Armadillo
@@ -72,54 +39,6 @@ SEXP pNorm1D(NumericVector x, double mean, double sd) {
 //' @param sigma The covariance matrix (2x2). 
 //' @return The distribution function.
 //' @author Lars Relund \email{lars@@relund.dk}
-//' @examples
-//' # test against pmvnorm
-//' times<-500
-//' diff<-rep(NA,times)
-//' diff_arma<-rep(NA,times)
-//' for (i in 1:times) {
-//'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-//'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-//'    mean <- c(runif(1,1,10),runif(1,1,10))
-//'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-//'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-//'    p1<-pmvnorm(lower=lower,upper=upper,mean=mean,sigma=sigma)
-//'    p2<-pNorm2D(lower, upper, mean, sigma)
-//'    p3<-pNorm2D_arma(lower, upper, mean, sigma)
-//'    diff[i]<-abs(p1-p2)
-//'    diff_arma[i]<-abs(p1-p3)
-//' }
-//' if (all(diff<1e-15)) cat("No problems with pNorm2D") else stop("Results for pNorm2D not the same!")
-//' if (all(diff_arma<1e-15)) cat("No problems with pNorm2D_arma") else stop("Results for pNorm2D_arma not the same!")
-//' 
-//' # compare performance
-//' testPmvnorm<-function() {
-//'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-//'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-//'    mean <- c(runif(1,1,10),runif(1,1,10))
-//'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-//'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-//'    pmvnorm(lower=lower,upper=upper,mean=mean,sigma=sigma)
-//' }
-//' testpNorm2D<-function() {
-//'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-//'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-//'    mean <- c(runif(1,1,10),runif(1,1,10))
-//'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-//'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-//'    pNorm2D_arma(lower, upper, mean, sigma)
-//' }
-//' testpNorm2D_arma<-function() {
-//'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-//'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-//'    mean <- c(runif(1,1,10),runif(1,1,10))
-//'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-//'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-//'    pNorm2D_arma(lower, upper, mean, sigma)
-//' }
-//' 
-//' require(rbenchmark) 
-//' benchmark(testPmvnorm(), testpNorm2D(), testpNorm2D_arma, order="relative", replications=10000)[,1:4]
 //' @export
 // [[Rcpp::export]]
 double pNorm2D_arma(arma::vec lower, arma::vec upper, arma::vec mean, arma::mat sigma) {
@@ -157,54 +76,6 @@ double pNorm2D_arma(arma::vec lower, arma::vec upper, arma::vec mean, arma::mat 
 //' @param sigma The covariance matrix (2x2). 
 //' @return The distribution function.
 //' @author Lars Relund \email{lars@@relund.dk}
-//' @examples
-//' # test against pmvnorm
-//' times<-500
-//' diff<-rep(NA,times)
-//' diff_arma<-rep(NA,times)
-//' for (i in 1:times) {
-//'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-//'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-//'    mean <- c(runif(1,1,10),runif(1,1,10))
-//'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-//'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-//'    p1<-pmvnorm(lower=lower,upper=upper,mean=mean,sigma=sigma)
-//'    p2<-pNorm2D(lower, upper, mean, sigma)
-//'    p3<-pNorm2D_arma(lower, upper, mean, sigma)
-//'    diff[i]<-abs(p1-p2)
-//'    diff_arma[i]<-abs(p1-p3)
-//' }
-//' if (all(diff<1e-15)) cat("No problems with pNorm2D") else stop("Results for pNorm2D not the same!")
-//' if (all(diff_arma<1e-15)) cat("No problems with pNorm2D_arma") else stop("Results for pNorm2D_arma not the same!")
-//' 
-//' # compare performance
-//' testPmvnorm<-function() {
-//'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-//'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-//'    mean <- c(runif(1,1,10),runif(1,1,10))
-//'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-//'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-//'    pmvnorm(lower=lower,upper=upper,mean=mean,sigma=sigma)
-//' }
-//' testpNorm2D<-function() {
-//'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-//'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-//'    mean <- c(runif(1,1,10),runif(1,1,10))
-//'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-//'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-//'    pNorm2D_arma(lower, upper, mean, sigma)
-//' }
-//' testpNorm2D_arma<-function() {
-//'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-//'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-//'    mean <- c(runif(1,1,10),runif(1,1,10))
-//'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-//'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-//'    pNorm2D_arma(lower, upper, mean, sigma)
-//' }
-//' 
-//' require(rbenchmark) 
-//' benchmark(testPmvnorm(), testpNorm2D(), testpNorm2D_arma, order="relative", replications=10000)[,1:4]
 //' @export
 // [[Rcpp::export]]
 double pNorm2D(NumericVector lower, NumericVector upper, NumericVector mean, NumericMatrix sigma) {

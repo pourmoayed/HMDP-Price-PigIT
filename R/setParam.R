@@ -13,7 +13,7 @@
 #' @param marketingLength Daily length from marketing action to sending the pigs to slaughterhouse.
 #' @param pigletLeadTime Lead time length of buying new piglets. Related decision is made in termination time.
 #' @param meanWeights Avergae weight of the pigs in the RRM model.
-#' @param sdweights Standard deviation of weights during the growing period in the RRM model.
+#' @param sdWeights Standard deviation of weights during the growing period in the RRM model.
 #' @param meanGrowth Average growth of the pigs in the RRM model.
 #' @param sdGrowth Standard deviation of growth during the growing period in the RRM model.
 #' @param modPolicy a bool variable showing the HMDP will be solved for a given policy.
@@ -28,7 +28,8 @@
 #' @param centerPointsTP Center points used in the discretization for the trend of pig price estimate.
 #' @param centerPointsTF Center points used in the discretization for the trend of feed price estimate.
 #' @param centerPointsSP Center points used in the discretization for the slope of pig price estimate.
-#' @param centerPointsSF Center points used in the discretization for the slope of feed price estimate. 
+#' @param centerPointsSF Center points used in the discretization for the slope of feed price estimate.
+#' @param centerPointsSPi Center points used in the discretization for the slope of piglet price estimate.
 #' @return A list containing all the parameters
 #' @export 
 #' @author Reza Pourmoayed \email{rpourmoayed@@econ.au.dk} and Lars Relund \email{lars@@relund.dk}
@@ -41,7 +42,6 @@ setParameters<-function(tMax=15,
                         avgInsWeight=30,
                         avgInsSd=2.2, # This value must be included in the related state vector!
                         convRateSd = 1.4,
-                        coefPiglet = 38, 
                         cleaningPeriod=4,  # unit is day  
                         marketingLength=3, # unit is day
                         pigletLeadTime=1,  # unit is week
@@ -74,7 +74,6 @@ setParameters<-function(tMax=15,
    model$avgInsWeight<-avgInsWeight
    model$avgInsSd<-avgInsSd
    model$convRateSd<-convRateSd
-   model$coefPiglet<-coefPiglet
    model$cleaningPeriod<-cleaningPeriod
    model$marketingLength<-marketingLength
    model$pigletLeadTime<-pigletLeadTime
@@ -197,6 +196,7 @@ paramDLMs<-function(dlmPig, dlmFeed, dlmPiglet){
 #' A function to retun the required covariance matrices to compute the transition probabilities of the HMDP. 
 #' 
 #' @param iniDLM A list that contains the initial parameters of the related DLM.
+#' @param param A list including the parameters of the HMDP model.
 #' @param Y A list included the observations for the related DLM. 
 #' 
 #' @return A list containing covariance matrices used in file dlm.h to compute the transition probabilities.  
@@ -293,6 +293,15 @@ buildDLM<-function(iniDLM,param,Y){
 }
 
 ####################################################################
+
+#' A function to find the id of a state in the discretized intervals. 
+#' 
+#' @param st Given value of state.
+#' @param matDis A matrix including the discretized intervals of the related stae. 
+#' 
+#' @return State id in matDis.   
+#' @export
+#' @author Reza Pourmoayed \email{rpourmoayed@@econ.au.dk}  
 
 findIndex<-function(st,matDis){
   hh<--1

@@ -141,7 +141,6 @@ public:  // methods
             
    }
       
-     
      /** Transition probability, i.e. bivariate cumulative normal of pig price. */  //Two levels
      double logTransPrTSP(int s, int t, arma::vec lower, arma::vec upper, arma::vec mt){
        arma::vec mean; 

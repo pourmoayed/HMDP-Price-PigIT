@@ -1,13 +1,18 @@
+#Note: To be able to run a model with a short time, change the values of
+# centerPointsTP and centerPointsTF in "setParameters" function to:
+# centerPointsTP = round( seq(9.2,11.2,length=2), 2 ),
+# centerPointsTF =  round( seq(1.5,1.7,length=2), 2 ),
 
 library(hmdpPricePigIT)
 library(data.table)
 
-#Estimate the RRM parameters
-source("../paremeters estimations/RRM parameters.R", chdir = TRUE)
 
-#find the index id of pork and feed price: 
-idTP = 2; #index of pork price
-idTF = 2; # index of feed price 
+#Estimate the RRM parameters
+source("../paremeters_estimations/rrmParam.R", chdir = TRUE)
+
+#find the index id of pork and feed prices: 
+idTP = 2; #index of pork price (predefined values)
+idTF = 2; # index of feed price (predefined values) 
 if(givenPolicy){
   idTP = findIndex(porkPrice,param$IntervalsTP) # index of prior for pork price based on price setting (when modPolicy = T)
   idTF = findIndex(feedPrice,param$IntervalsTF) # index of prior for feed price based on price setting (when modPolicy = T)
@@ -30,10 +35,10 @@ param<-setParameters(tMax=15,
 )
 
 #Estimate the SSMs parameters
-source("../paremeters estimations/SSMs parameters.R", chdir = TRUE)
+source("../paremeters_estimations/ssmParam.R", chdir = TRUE)
 
 #Estimate the HMDP reward parameters
-source("../paremeters estimations/HMDP reward parameters.R", chdir = TRUE)
+source("../paremeters_estimations/hmdpRewardParam.R", chdir = TRUE)
 
 #Build the HMDP
 prefix<-"main_"

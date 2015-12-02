@@ -1,8 +1,16 @@
 #include <RcppArmadillo.h>    // we only include RcppArmadillo.h which pulls Rcpp.h in for us
 using namespace Rcpp;
 using namespace arma;
-// [[Rcpp::depends(RcppArmadillo)]]
 
+
+/**
+ * Compute the price of carcass given the carcass weight 
+ * @param cW carcass weight.
+ * @param p maximum price of 1 kg carcass (weight interval [70-95] )
+ * @param s Stage number in the second level of HMDP.
+ *  
+ * @return carcass price. 
+ */
 double priceCarcass(const double & cW, const double & p) {
   if(cW<50) return 0;  // interval [0,50) 
   if(50<=cW && cW<60) return 0.1010101010101010082787*(cW-50) + p - 4; // interval [50,60) 
@@ -16,6 +24,12 @@ double priceCarcass(const double & cW, const double & p) {
   return(0);
 }
 
+/**
+ * Compute the bonus of leanness persentage in the meat.
+ * @param lean Leanness persentage.
+ * 
+ * @return The bonus of leanness persentage
+ */
 double priceLeanness(const double & lean) {
   if(lean<50) return -2.2;   // interval [0,50) 
   if(50<=lean && lean<57) return 0.2*(lean - 61);  // interval [50,57) 
@@ -24,19 +38,40 @@ double priceLeanness(const double & lean) {
   return(0);
 }
 
+/**
+ * Sort a vector based on the order of elements in a given vector. 
+ * 
+ * @param givenR A vector that should be sorted
+ * @param givenI A given sorted vector
+ * 
+ * @return A sorted vector.
+ *   
+ */
 rowvec sortRow(rowvec  givenR, urowvec givenI){
   rowvec sortR(givenR.size());
-  for(int i=0; i<givenR.size(); i++ ){
+  for(unsigned int i=0; i<givenR.size(); i++ ){
       sortR[i] = givenR[ givenI[i] ];
   }
   return(sortR);
 }
 
 
-// simulate without growth values with new approach. 
-
+//' Calculate the reward of seeling and the feed intake of the pigs in an unselected pen using simulation.
+//' 
+//' @param pigs Number of pigs in the pen.
+//' @param samples Number of samples in the simulation.  
+//' @param weeks Number of weeks in a production cycle.
+//' @param prices Set of possible prices for the carcass.
+//' @param weeks Number of weeks in a production cycle.
+//' @param V Covariance matrix of the RRM model for the random parameters.
+//' @param B Fixed parameters of the RRM model.  
+//' @param R Standard deviation of residual error in the RRM model.
+//' 
+//' @return A list used in R including the weight, growth, leanness, 
+//' and the reward of sorted pigs in the pen. 
+//' @export
 // [[Rcpp::export]]
-List SimulatePigs(const int & pigs, const int & samples, const int & weeks, const arma::vec & prices, const arma::mat & V, const arma::mat & B, const arma::mat & R) {
+SEXP SimulatePigs(const int & pigs, const int & samples, const int & weeks, const arma::vec & prices, const arma::mat & V, const arma::mat & B, const arma::mat & R) {
   double tM = 3;    // lead time marketing
   mat X(1,3);   // covariate matrix 
   vec meanW(weeks);
@@ -61,8 +96,8 @@ List SimulatePigs(const int & pigs, const int & samples, const int & weeks, cons
     randEffSample.slice(s) = randEff.t(); 
     }
   
-  double muT, muN; // mu_t and next mean mu_t+1
-  double sdT, sdN;
+//  double muT, muN; // mu_t and next mean mu_t+1
+//  double sdT, sdN;
   mat leanT(samples,pigs);  // leanness  
   mat lWT(samples,pigs);    // live weight
   mat sortLWT(samples,pigs);    // live weight of sorted pigs

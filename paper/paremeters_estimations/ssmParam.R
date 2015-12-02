@@ -1,21 +1,18 @@
+# In this file the parameters of the SSM of pork, feed and piglets are estimated 
+# using the dlm package in R. The price data from 2006 to 2014 is used in the DLMs(SSMs).
 
 library(data.table)
 require(dlm) 
 
-# Estimate the DLMs parameters: 
-
 # Read the price data form data base
-#PriceData = read.table(file=file.choose(),header=T,sep=";")
-PriceData = read.table(file="price data from 2005.csv",header=T,sep=";")
+PriceData = read.table(file="priceData.csv",header=T,sep=";")
 finisher<-ts(PriceData[,3],start=c(2006,1), end=c(2014,52),frequency=52)
 feed<-ts(PriceData[,4], start=c(2006,1), end=c(2014,52),frequency=52)
 piglet<-ts(PriceData[,2], start=c(2006,1), end=c(2014,52),frequency=52)
 
 # Build the SSMs and estimate the variance components
 
-#Pig price 
-
-
+#Pork price 
 buildDLMPig <- function(x){
   
   GG1 = matrix (data = c(1,0,1,1), ncol = 2)
@@ -35,11 +32,9 @@ buildDLMPig <- function(x){
 
 Param <- dlmMLE ( finisher  , parm=rep (1, 1), buildDLMPig)#, method="Nelder-Mead" )
 #exp(Param$par)
-
 dlmPig <- buildDLMPig(Param$par)
 
 #Feed price 
-
 iniFeed<- mean(feed) # Initial feed-mix that we consider it as average feed price 
 
 dataFeed<- feed - iniFeed 
@@ -63,11 +58,9 @@ buildDLMFeed <- function(x){
 
 Param <- dlmMLE ( dataFeed, parm=rep (1, 2), buildDLMFeed) #, method="Nelder-Mead" )
 #exp(Param$par)
-
 dlmFeed <- buildDLMFeed(Param$par)
 
 # Piglet price
-
 dataPiglet<-log(piglet) - log(finisher)
 
 buildDLMPiglet <- function(x){
@@ -89,11 +82,11 @@ buildDLMPiglet <- function(x){
 
 Param <- dlmMLE ( dataPiglet, parm=rep (1, 2), buildDLMPiglet) #, method="Nelder-Mead" )
 #exp(Param$par)
-
 dlmPiglet <- buildDLMPiglet(Param$par)
 
 #-----------------------------------------------------------------------------------------------------
-# create DLMs
+
+# create SSMs using the estimated parameters above and the  "paramDLMs" function in \link{setParam.R} 
 inidlms<-paramDLMs(dlmPig, dlmFeed,dlmPiglet)
 yPig<-t( seq(8,13, length=inidlms$DLMP$dimObs) ) 
 yFeed<-t( seq(1.1,2.2, length=inidlms$DLMF$dimObs) ) 

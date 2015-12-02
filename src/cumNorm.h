@@ -6,7 +6,6 @@
 using namespace Rcpp;
 using namespace std;
 
-
 /*
 ' Univariate cumulative normal (distribution function for the standard normal)
 ' 

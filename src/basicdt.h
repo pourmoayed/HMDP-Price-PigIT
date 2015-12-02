@@ -124,7 +124,7 @@ inline int findIndice(arma::mat  matPolicy, int  tp, int  sp, int  tf, int  sf, 
 //  && matPolicy.col(6)==n && matPolicy.col(7)==s);
 //  return(q[0]);
       
-  for (int i=0; i<matPolicy.n_rows; i++){    
+  for (unsigned int i=0; i<matPolicy.n_rows; i++){    
     if( (matPolicy(i,1)==tp) & (matPolicy(i,2)==sp) & (matPolicy(i,3)==tf) & (matPolicy(i,4)==sf)
     & (matPolicy(i,5)==spi) & (matPolicy(i,6)==n) & (matPolicy(i,7)==s) ){
       return (i);      

@@ -12,31 +12,6 @@
 #' @param sd The standard deviation.
 #' @return The distribution function.
 #' @author Lars Relund \email{lars@@relund.dk}
-#' @examples
-#' # test against pnorm
-#' times<-500
-#' x<-runif(times,-10,10)
-#' mean<-0
-#' sd<-3
-#' diff<-abs(pnorm(x,mean,sd)-pNorm1D(x,mean,sd))
-#' if (all(diff<1e-15)) cat("No problems")
-#' 
-#' # compare performance
-#' testpnorm<-function() {
-#'    x<-runif(1,-10,10)
-#'    mean<-runif(1,-10,10)
-#'    sd<-runif(1,0,5)
-#'    pnorm(x,mean,sd)
-#' }
-#' testpNorm1D<-function() {
-#'    x<-runif(1,-10,10)
-#'    mean<-runif(1,-10,10)
-#'    sd<-runif(1,0,5)
-#'    pNorm1D(x,mean,sd)
-#' }
-#' 
-#' require(rbenchmark)
-#' benchmark(testpnorm(), testpNorm1D(), order="relative", replications=100000)[,1:4]
 #' @export
 pNorm1D <- function(x, mean, sd) {
     .Call('hmdpPricePigIT_pNorm1D', PACKAGE = 'hmdpPricePigIT', x, mean, sd)
@@ -57,54 +32,6 @@ pNorm1D <- function(x, mean, sd) {
 #' @param sigma The covariance matrix (2x2). 
 #' @return The distribution function.
 #' @author Lars Relund \email{lars@@relund.dk}
-#' @examples
-#' # test against pmvnorm
-#' times<-500
-#' diff<-rep(NA,times)
-#' diff_arma<-rep(NA,times)
-#' for (i in 1:times) {
-#'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-#'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-#'    mean <- c(runif(1,1,10),runif(1,1,10))
-#'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-#'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-#'    p1<-pmvnorm(lower=lower,upper=upper,mean=mean,sigma=sigma)
-#'    p2<-pNorm2D(lower, upper, mean, sigma)
-#'    p3<-pNorm2D_arma(lower, upper, mean, sigma)
-#'    diff[i]<-abs(p1-p2)
-#'    diff_arma[i]<-abs(p1-p3)
-#' }
-#' if (all(diff<1e-15)) cat("No problems with pNorm2D") else stop("Results for pNorm2D not the same!")
-#' if (all(diff_arma<1e-15)) cat("No problems with pNorm2D_arma") else stop("Results for pNorm2D_arma not the same!")
-#' 
-#' # compare performance
-#' testPmvnorm<-function() {
-#'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-#'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-#'    mean <- c(runif(1,1,10),runif(1,1,10))
-#'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-#'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-#'    pmvnorm(lower=lower,upper=upper,mean=mean,sigma=sigma)
-#' }
-#' testpNorm2D<-function() {
-#'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-#'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-#'    mean <- c(runif(1,1,10),runif(1,1,10))
-#'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-#'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-#'    pNorm2D_arma(lower, upper, mean, sigma)
-#' }
-#' testpNorm2D_arma<-function() {
-#'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-#'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-#'    mean <- c(runif(1,1,10),runif(1,1,10))
-#'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-#'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-#'    pNorm2D_arma(lower, upper, mean, sigma)
-#' }
-#' 
-#' require(rbenchmark) 
-#' benchmark(testPmvnorm(), testpNorm2D(), testpNorm2D_arma, order="relative", replications=10000)[,1:4]
 #' @export
 pNorm2D_arma <- function(lower, upper, mean, sigma) {
     .Call('hmdpPricePigIT_pNorm2D_arma', PACKAGE = 'hmdpPricePigIT', lower, upper, mean, sigma)
@@ -125,54 +52,6 @@ pNorm2D_arma <- function(lower, upper, mean, sigma) {
 #' @param sigma The covariance matrix (2x2). 
 #' @return The distribution function.
 #' @author Lars Relund \email{lars@@relund.dk}
-#' @examples
-#' # test against pmvnorm
-#' times<-500
-#' diff<-rep(NA,times)
-#' diff_arma<-rep(NA,times)
-#' for (i in 1:times) {
-#'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-#'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-#'    mean <- c(runif(1,1,10),runif(1,1,10))
-#'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-#'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-#'    p1<-pmvnorm(lower=lower,upper=upper,mean=mean,sigma=sigma)
-#'    p2<-pNorm2D(lower, upper, mean, sigma)
-#'    p3<-pNorm2D_arma(lower, upper, mean, sigma)
-#'    diff[i]<-abs(p1-p2)
-#'    diff_arma[i]<-abs(p1-p3)
-#' }
-#' if (all(diff<1e-15)) cat("No problems with pNorm2D") else stop("Results for pNorm2D not the same!")
-#' if (all(diff_arma<1e-15)) cat("No problems with pNorm2D_arma") else stop("Results for pNorm2D_arma not the same!")
-#' 
-#' # compare performance
-#' testPmvnorm<-function() {
-#'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-#'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-#'    mean <- c(runif(1,1,10),runif(1,1,10))
-#'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-#'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-#'    pmvnorm(lower=lower,upper=upper,mean=mean,sigma=sigma)
-#' }
-#' testpNorm2D<-function() {
-#'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-#'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-#'    mean <- c(runif(1,1,10),runif(1,1,10))
-#'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-#'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-#'    pNorm2D_arma(lower, upper, mean, sigma)
-#' }
-#' testpNorm2D_arma<-function() {
-#'    sigma <- matrix(c(runif(1,1,10),1,1,runif(1,1,10)),nrow=2)
-#'    sigma[1,2]<-sigma[2,1]<-sqrt(sigma[1,1]*sigma[2,2])*runif(1,-1,1)
-#'    mean <- c(runif(1,1,10),runif(1,1,10))
-#'    lower<-c(runif(1,-6,6),runif(1,-6,6))
-#'    upper<-c(runif(1,lower[1],6),runif(1,lower[2],6))
-#'    pNorm2D_arma(lower, upper, mean, sigma)
-#' }
-#' 
-#' require(rbenchmark) 
-#' benchmark(testPmvnorm(), testpNorm2D(), testpNorm2D_arma, order="relative", replications=10000)[,1:4]
 #' @export
 pNorm2D <- function(lower, upper, mean, sigma) {
     .Call('hmdpPricePigIT_pNorm2D', PACKAGE = 'hmdpPricePigIT', lower, upper, mean, sigma)
@@ -181,18 +60,33 @@ pNorm2D <- function(lower, upper, mean, sigma) {
 #' Build the HMDP (2 levels with shared linking) using the C++ binary writer. 
 #' 
 #' @param filePrefix Prefix used by the binary files storing the MDP model.
-#' @param param Model parameters a list created using \code{\link{setParameters}}.
-#' @param paramDLMPi A list including the parameters for the DLMW (DLM for weigh information) created using \file{\link{setParam.R}} 
-#' @param paramDLMP A list including the parameters for the DLMP (DLM for pig price information) created using \file{\link{setParam.R}}
-#' @param paramDLMF A list including the parameters for the DLMF (DLM for feed price information) created using \file{\link{setParam.R}}
-#'   
+#' @param param Model parameters of the HMDP.
+#' @param paramDLMPi A list including the parameters for the DLMW (DLM for weigh information). 
+#' @param paramDLMP A list including the parameters for the DLMP (DLM for pork price information). 
+#' @param paramDLMF A list including the parameters for the DLMF (DLM for feed price information) 
+#' @param paramPolicy A given policy for the hmdp. In finding the optimal policy of the HMDP, this policy will not be used. 
+#' 
 #' @return Build log (character).
-#' @author Lars Relund \email{lars@@relund.dk}, Reza Pourmoayed \email{rpourmoayed@econ.au.dk}
+#' @author Lars Relund \email{lars@@relund.dk}, Reza Pourmoayed \email{rpourmoayed@@econ.au.dk}
 #' @export
 BuildHMDP2 <- function(filePrefix, param, paramDLMP, paramDLMPi, paramDLMF, paramPolicy) {
     .Call('hmdpPricePigIT_BuildHMDP2', PACKAGE = 'hmdpPricePigIT', filePrefix, param, paramDLMP, paramDLMPi, paramDLMF, paramPolicy)
 }
 
+#' Calculate the reward of seeling and the feed intake of the pigs in an unselected pen using simulation.
+#' 
+#' @param pigs Number of pigs in the pen.
+#' @param samples Number of samples in the simulation.  
+#' @param weeks Number of weeks in a production cycle.
+#' @param prices Set of possible prices for the carcass.
+#' @param weeks Number of weeks in a production cycle.
+#' @param V Covariance matrix of the RRM model for the random parameters.
+#' @param B Fixed parameters of the RRM model.  
+#' @param R Standard deviation of residual error in the RRM model.
+#' 
+#' @return A list used in R including the weight, growth, leanness, 
+#' and the reward of sorted pigs in the pen. 
+#' @export
 SimulatePigs <- function(pigs, samples, weeks, prices, V, B, R) {
     .Call('hmdpPricePigIT_SimulatePigs', PACKAGE = 'hmdpPricePigIT', pigs, samples, weeks, prices, V, B, R)
 }

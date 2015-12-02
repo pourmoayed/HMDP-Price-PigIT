@@ -9,12 +9,14 @@
 #' @param piglet Time series of piglet price date
 #' @param dlmPig Time series of piglet price date
 #' @param dlmFeed Time series of piglet price date
+#' @param dlmPiglet Time series of piglet price date
 #' @param policy optimal policy of the HMDP
-#' @param mdp wLbl durLbl parameters related to bulding step of HMDP
+#' @param wLbl parameters related to bulding step of HMDP
+#' @param durLbl parameters related to bulding step of HMDP
 #' @param g averga reward pet time unit of the optimal policy
 #' @param usePig A boolean variable for inversing the trend of pork price in the given time series    
 #' @param useFeed A boolean variable for inversing the trend of feed price in the given time series
-#' @param useOiglet A boolean variable for inversing the trend of piglet price in the given time series
+#' @param usePiglet A boolean variable for inversing the trend of piglet price in the given time series
 #'       
 #' @return A data table containing the optimal action and other information for polting the scenarios with optimal actions
 #' @export 

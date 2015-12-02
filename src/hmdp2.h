@@ -153,7 +153,6 @@ private:
     */
     void CalcTransPrJump(int & iTPt, int & iSPt, int & iTFt, int & iSFt, int & iSPit, int & s);
 
-
     /** Build a map of the index of states for the given stage in the second level. That is, the map to identify state id in the second level given the current stage.
     * 
     * @param stage Stage number to build the map.
@@ -170,7 +169,7 @@ private:
         
     /** Calculate the  weight values under action Marketing (cull).
     * 
-    *  Values are stored in the 7-dim vector \var(weightCull[s][cull][iTP][iTF][iW][iSd][n]).
+    *  Values are stored in the 7-dim vector \var(weightCull[s][cull][iTP][iTF][n]).
     */
     void CalcWeightMarket();
     
@@ -350,7 +349,6 @@ private:   // variables
    double avgInsWeight;
    double avgInsSd;
    double convRateSd;
-   double coefPiglet;
    
    bool modPolicy; 
 
