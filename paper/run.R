@@ -5,9 +5,11 @@
 ## 2) Create data for the 3 scenarios (stored in 3 csv files)
 ## 3) Plot the results (stored in pdf files)
 
-# remember to set the working dir to ../paper/
+# remember to set the working dir to this folder
+setwd("./paper/")
+
 library(hmdpPricePigIT)
-useScenariosPaper <- FALSE   # use the scenarios used in the paper
+useScenariosPaper <- TRUE   # use the scenarios used in the paper
 if (!useScenariosPaper){
   message("Use new scenarios.")
   source("optimize_hmdp.R")   # find optimal policy
