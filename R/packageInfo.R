@@ -16,4 +16,5 @@
 #' @docType package
 #' @author Lars Relund \email{lars@@relund.dk} and Reza Pourmoayed \email{rpourmoayed@@econ.au.dk}
 #' @useDynLib hmdpPricePigIT
+#' @import MDP2
 NULL

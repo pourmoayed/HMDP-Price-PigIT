@@ -79,7 +79,6 @@ BuildHMDP2 <- function(filePrefix, param, paramDLMP, paramDLMPi, paramDLMF, para
 #' @param samples Number of samples in the simulation.  
 #' @param weeks Number of weeks in a production cycle.
 #' @param prices Set of possible prices for the carcass.
-#' @param weeks Number of weeks in a production cycle.
 #' @param V Covariance matrix of the RRM model for the random parameters.
 #' @param B Fixed parameters of the RRM model.  
 #' @param R Standard deviation of residual error in the RRM model.

@@ -97,7 +97,7 @@ setParameters<-function(tMax=15,
    model$centerPointsSPi<-centerPointsSPi
    model$centerPointsSF<-centerPointsSF
       
-   require(discretizeGaussian)          # We start the discritization from here 
+   #require(discretizeGaussian)          # We start the discritization from here 
    obj<-Discretize()
    IntervalsTP<-matrix()
    IntervalsTF<-matrix()

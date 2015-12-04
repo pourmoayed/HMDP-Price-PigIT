@@ -11,6 +11,7 @@
 #' @param dlmFeed Time series of piglet price date
 #' @param dlmPiglet Time series of piglet price date
 #' @param policy optimal policy of the HMDP
+#' @param mdp The HMDP loaded using \code{loadMDP}
 #' @param wLbl parameters related to bulding step of HMDP
 #' @param durLbl parameters related to bulding step of HMDP
 #' @param g averga reward pet time unit of the optimal policy
