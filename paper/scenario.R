@@ -1,6 +1,5 @@
-
 # Three scaenario are defined for time period  [startTime,endTime] (see run.R file) and the results are 
-#stored in the data frames datS1, datS2, and datS3 
+# stored in the data frames datS1, datS2, and datS3 
 #
 # Scenario 1 is based on the price date defined in time period  [startTime,endTime]
 # In Scenario 2 the trend of feed price is inverted and the trends of pork and piglet prices are same with Scenario 1
@@ -18,7 +17,7 @@ datScenario3<-optimalSearch(param, scenarioNum=3, startTime=startTime, endTime=e
 if(param$modPolicy==F)
   do.call(file.remove,list(list.files(pattern = ".bin")))
 
-#Store in the csv files
+# Store in the csv files
 
 datScenario1 <- data.frame(lapply(datScenario1, as.numeric), stringsAsFactors=FALSE)
 datScenario2 <- data.frame(lapply(datScenario2, as.numeric), stringsAsFactors=FALSE)

@@ -283,7 +283,7 @@ SEXP HMDP2::BuildL1Process(int & iFeed) {
 
    int s, n, cull, iTP, iSP, iSF, iSPi;
    w.Process(); // level 2
-   DBG4("procese: " <<iFeed+1<<endl)
+   DBG4("process: " <<iFeed+1<<endl)
       for(s = 1; s<=(lastStage); s++) {
          //if(s != (tMax-tStartMarketing +2) ) 
          BuildMapL2Vector(s+1);            
@@ -387,7 +387,7 @@ SEXP HMDP2::BuildL1ProcessMPolicy(int & iFeed) {
 
    int s, n, cull, iTP, iSP, iSF, iSPi, rowNum;
    w.Process(); // level 2
-   DBG4("procese: " <<iFeed+1<<endl)
+   DBG4("process: " <<iFeed+1<<endl)
       for(s = 1; s<=(lastStage); s++) {
          //if(s != (tMax-tStartMarketing +2) ) 
          BuildMapL2Vector(s+1);            

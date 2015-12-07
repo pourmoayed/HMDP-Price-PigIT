@@ -22,17 +22,17 @@ param<-setParameters(tMax=15,
 )
 
 # small example
-# param<-setParameters(tMax=15,
-#                      pigs=15,
-#                      tStartMarketing=9,
-#                      meanWeights = weightMean,
-#                      sdWeights = weightSd,
-#                      centerPointsTP = round( seq(9.2,11.2,length=2), 2 ), 
-#                      centerPointsTF = round( seq(1.5,1.7,length=2), 2 ),
-#                      centerPointsSP = round( seq(-0.4,0.4,length=5), 2 ), #must include 0
-#                      centerPointsSPi = round( seq(3.5,3.7,length=5), 2 ), #round( seq(3.5,3.8,length=3), 2 ),
-#                      centerPointsSF = round( seq(-0.1,0.1,length=5), 2) #round( seq(-0.1,0.1,length=9), 2)  # #must include 0
-# )
+param<-setParameters(tMax=15,
+                     pigs=15,
+                     tStartMarketing=9,
+                     meanWeights = weightMean,
+                     sdWeights = weightSd,
+                     centerPointsTP = round( seq(9.2,11.2,length=2), 2 ),
+                     centerPointsTF = round( seq(1.5,1.7,length=2), 2 ),
+                     centerPointsSP = round( seq(-0.4,0.4,length=5), 2 ), #must include 0
+                     centerPointsSPi = round( seq(3.5,3.7,length=5), 2 ), #round( seq(3.5,3.8,length=3), 2 ),
+                     centerPointsSF = round( seq(-0.1,0.1,length=5), 2) #round( seq(-0.1,0.1,length=9), 2)  # #must include 0
+)
 
 #Estimate the SSMs parameters
 source("paremeters_estimations/ssmParam.R", chdir = TRUE)
@@ -50,8 +50,7 @@ rm(mdp)
 wLbl<-"Reward"
 durLbl<-"Time"
 mdp<-loadMDP(prefix, check = T,verbose = T)
-g<-policyIteAve(mdp,wLbl,durLbl, maxIte = 5)     
+g<-policyIteAve(mdp,wLbl,durLbl)     
 policy<-getPolicy(mdp)              
-if(param$modPolicy==T)
-do.call(file.remove,list(list.files(pattern = ".bin")))
+  if(param$modPolicy==T) do.call(file.remove,list(list.files(pattern = ".bin")))
 
