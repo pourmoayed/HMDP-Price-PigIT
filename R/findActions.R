@@ -2,6 +2,7 @@
 #' Find the optimal actions of the HMDP given price scenarios 
 #' 
 #' @param scenarioNum Scenario number related to the price data in a time period
+#' @param param Prameter values of the HMDP. 
 #' @param startTime Start time of the time period contained price data of the related scenario 
 #' @param endTime End time of the time period contained price data of the related scenario
 #' @param finisher Time series of pork price date
@@ -24,7 +25,7 @@
 #' @author Reza Pourmoayed \email{rpourmoayed@@econ.au.dk} and Lars Relund \email{lars@@relund.dk}
 
 
-optimalSearch<-function(scenarioNum, startTime, endTime,  finisher, feed, piglet, 
+optimalSearch<-function(param, scenarioNum, startTime, endTime,  finisher, feed, piglet, 
                         dlmPig, dlmFeed, dlmPiglet, policy, mdp, wLbl, durLbl, g, usePig, useFeed, usePiglet){
   
   #read the data and estimate the posterior parameters:
@@ -53,6 +54,7 @@ optimalSearch<-function(scenarioNum, startTime, endTime,  finisher, feed, piglet
   datFeedObs<-datFeed - datFeed[1]
   datpigletObs<-log(datPiglet) - log(datPig)
   
+  #require(dlm)
   dlmPig$m0<-c(datPigObs[1],0) # m0 should be adjasted and C0 from parameters ?
   posPig<-round(dlmFilter(datPigObs[-1], mod = dlmPig)$m,3)#[-param$tMax,]
   dlmFeed$m0<-datFeedObs[1] # m0 should be adjasted and C0 from parameters

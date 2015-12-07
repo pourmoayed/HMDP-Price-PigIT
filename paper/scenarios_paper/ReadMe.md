@@ -1,6 +1,6 @@
 # results of three scenarios used in the paper
 
-This folder contains the data of three scenarios with different patterns of price fluctuation. The data and optimal actions for Scenarios 1,2 and 3 have been stored in the csv file "datS1", "datS2" and "datS3", repectively.
+This folder contains the data of three scenarios with different patterns of price fluctuation. The data and optimal actions for Scenarios 1,2 and 3 have been stored in the csv file "datPaperS1", "datPaperS2" and "datPaperS3", repectively.
 
 
 ##description of columns in the csv files

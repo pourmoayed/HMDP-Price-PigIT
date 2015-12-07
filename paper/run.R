@@ -9,7 +9,7 @@
 setwd("./paper/")
 
 library(hmdpPricePigIT)
-useScenariosPaper <- TRUE   # use the scenarios used in the paper
+useScenariosPaper <- FALSE   # use the scenarios used in the paper
 if (!useScenariosPaper){
   message("Use new scenarios.")
   source("optimize_hmdp.R")   # find optimal policy
@@ -19,9 +19,16 @@ if (!useScenariosPaper){
   source("scenario.R")        # simulate the 3 pens (use optimal policy to identify feed-mix and number of pigs)
 }else{
   message("Use the scenarios and the optimal actions generated in the scenarios_paper folder.")
-  datS1 <- read.csv2("scenarios_paper/datS1.csv")
-  datS2 <- read.csv2("scenarios_paper/datS2.csv")
-  datS3 <- read.csv2("scenarios_paper/datS3.csv")
+  datPaperS1 <- read.csv2("scenarios_paper/datPaperS1.csv")
+  datPaperS2 <- read.csv2("scenarios_paper/datPaperS2.csv")
+  datPaperS3 <- read.csv2("scenarios_paper/datPaperS3.csv")
 }
+
 source("plot.R", echo = TRUE)    # plot results as tex files
-tools::texi2pdf(file = "Scenarios_plot.tex", clean = T)
+
+if (useScenariosPaper){
+  tools::texi2pdf(file = "ScenariosPaper_plot.tex", clean = T)
+}else{
+  tools::texi2pdf(file = "Scenarios_plot.tex", clean = T)
+}
+

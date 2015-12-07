@@ -8,6 +8,7 @@
 ## 4) compute the VOI (value of price information)
 
 # remember to set the working dir to ../paper/policy_evaluation
+
 library(hmdpPricePigIT)
 
   message("Defind a price setting with specific values of pork and feed prices in variables porkPrice and feedPrice. Note that piglet price is automaticely calculated based on pork price.")

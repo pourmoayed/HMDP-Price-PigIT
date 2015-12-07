@@ -6,6 +6,16 @@ require(data.table)
 # load(file = "datS2")
 # load(file = "datS3")
 
+if(useScenariosPaper){
+  datS1 <- datPaperS1
+  datS2 <- datPaperS2
+  datS3 <- datPaperS3
+}else{
+  datS1 <- datScenario1
+  datS2 <- datScenario2
+  datS3 <- datScenario3
+}
+
 #plot the results based on observed variables 
 dtPlot<-rbindlist(list(datS1,datS2,datS3))
 #dtPlot$meanWeight<-dtPlot$meanWeight/10
@@ -79,7 +89,13 @@ datMarketing$name<-NA
 library(ggplot2)
 library(grid)
 library(tikzDevice)
-tikz("Scenarios_plot.tex", width = 10, height = 7, standAlone=T)
+
+if(useScenariosPaper){
+  tikz("ScenariosPaper_plot.tex", width = 10, height = 7, standAlone=T)
+}else{
+  tikz("Scenarios_plot.tex", width = 10, height = 7, standAlone=T)
+}
+
 plot<-ggplot(data=dat, aes(x=factor(t), y=y, group=name, shape=name, linetype=name ) ) + 
   geom_line() + scale_y_continuous(breaks=seq(-2,15,1), labels = c("","$a^*$",0:15) ) +
   #geom_point() + 

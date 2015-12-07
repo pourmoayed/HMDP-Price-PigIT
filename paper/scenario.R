@@ -6,13 +6,13 @@
 # In Scenario 2 the trend of feed price is inverted and the trends of pork and piglet prices are same with Scenario 1
 # In Scenario 3 the trend of feed and pork prices are inverted and the trends of feed price is same with Scenario 1
 
-datS1<-optimalSearch(scenarioNum=1, startTime=startTime, endTime=endTime,  finisher=finisher, feed=feed, piglet=piglet, 
+datScenario1<-optimalSearch(param, scenarioNum=1, startTime=startTime, endTime=endTime,  finisher=finisher, feed=feed, piglet=piglet, 
                      dlmPig=dlmPig, dlmFeed=dlmFeed, dlmPiglet=dlmPiglet, policy=policy, mdp=mdp, wLbl=wLbl, durLbl=durLbl, g=g, usePig=F, useFeed=F, usePiglet=F)
 
-datS2<-optimalSearch(scenarioNum=2, startTime=startTime, endTime=endTime,  finisher=finisher, feed=feed, piglet=piglet, 
+datScenario2<-optimalSearch(param, scenarioNum=2, startTime=startTime, endTime=endTime,  finisher=finisher, feed=feed, piglet=piglet, 
                      dlmPig=dlmPig, dlmFeed=dlmFeed, dlmPiglet=dlmPiglet, policy=policy, mdp=mdp, wLbl=wLbl, durLbl=durLbl, g=g, usePig=F, useFeed=T, usePiglet=F)
 
-datS3<-optimalSearch(scenarioNum=3, startTime=startTime, endTime=endTime,  finisher=finisher, feed=feed, piglet=piglet, 
+datScenario3<-optimalSearch(param, scenarioNum=3, startTime=startTime, endTime=endTime,  finisher=finisher, feed=feed, piglet=piglet, 
                      dlmPig=dlmPig, dlmFeed=dlmFeed, dlmPiglet=dlmPiglet, policy=policy, mdp=mdp, wLbl=wLbl, durLbl=durLbl, g=g, usePig=T, useFeed=F, usePiglet=T)
 
 if(param$modPolicy==F)
@@ -20,10 +20,10 @@ if(param$modPolicy==F)
 
 #Store in the csv files
 
-datS1 <- data.frame(lapply(datS1, as.numeric), stringsAsFactors=FALSE)
-datS2 <- data.frame(lapply(datS2, as.numeric), stringsAsFactors=FALSE)
-datS3 <- data.frame(lapply(datS3, as.numeric), stringsAsFactors=FALSE)
+datScenario1 <- data.frame(lapply(datScenario1, as.numeric), stringsAsFactors=FALSE)
+datScenario2 <- data.frame(lapply(datScenario2, as.numeric), stringsAsFactors=FALSE)
+datScenario3 <- data.frame(lapply(datScenario3, as.numeric), stringsAsFactors=FALSE)
 
-write.csv2(datS1, file = "datS1.csv",row.names=FALSE)
-write.csv2(datS2, file = "datS2.csv",row.names=FALSE)
-write.csv2(datS3, file = "datS3.csv",row.names=FALSE)
+write.csv2(datScenario1, file = "datScenario1.csv",row.names=FALSE)
+write.csv2(datScenario2, file = "datScenario2.csv",row.names=FALSE)
+write.csv2(datScenario3, file = "datScenario3.csv",row.names=FALSE)
