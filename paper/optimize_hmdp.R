@@ -9,6 +9,7 @@ library(hmdpPricePigIT)
 #Estimate the RRM parameters
 source("paremeters_estimations/rrmParam.R", chdir = TRUE)
 
+# full model (note long solution time)
 param<-setParameters(tMax=15,
                      pigs=15,
                      tStartMarketing=9,
@@ -21,7 +22,7 @@ param<-setParameters(tMax=15,
                      centerPointsSF = round( seq(-0.1,0.1,length=5), 2) #round( seq(-0.1,0.1,length=9), 2)  # #must include 0
 )
 
-# small example
+# a smaller example (used as default - comment out if you want the full model)
 param<-setParameters(tMax=15,
                      pigs=15,
                      tStartMarketing=9,
