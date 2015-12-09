@@ -104,7 +104,7 @@ optimalSearch<-function(param, scenarioNum, startTime, endTime,  finisher, feed,
   }
   
   #Find the optimal policy of the related external process
-  rm(mdpExternal,policyExternal)
+  #rm(mdpExternal,policyExternal)
   IdExternal<-subset(policy, stateLabel==paste("(",0,",",idxTF[1],",",0,")",sep="") )$sId
   infoExternal<-infoMDP(mdp = mdp, sId = IdExternal)
   stateFirst<-as.character(unlist(infoExternal$state["stateStr"]))

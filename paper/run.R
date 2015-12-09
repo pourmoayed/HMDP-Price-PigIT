@@ -12,7 +12,7 @@
 setwd("./paper/")
 
 library(hmdpPricePigIT)
-useScenariosPaper <- T   # use the results from the paper (just use the optimal policy saved)
+useScenariosPaper <- F   # use the results from the paper (just use the optimal policy saved)
 if (!useScenariosPaper){
   message("Calculate policy and apply to scenarios:")
   source("optimize_hmdp.R")   # find optimal policy

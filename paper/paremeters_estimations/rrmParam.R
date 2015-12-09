@@ -10,6 +10,7 @@
    batches = unique(pigWeighings$InsertionDate)  
    pens = unique(pigWeighings$PigPenName) 
 
+  # Select a set of date from the database of weight information.  
   b= 7# 7 # 9  batch number in the database
   d= 28# 28 # 30 Pen number in the database
   weights<-list()

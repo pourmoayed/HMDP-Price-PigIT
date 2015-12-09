@@ -16,7 +16,9 @@
 #' @param sdWeights Standard deviation of weights during the growing period in the RRM model.
 #' @param meanGrowth Average growth of the pigs in the RRM model.
 #' @param sdGrowth Standard deviation of growth during the growing period in the RRM model.
-#' @param modPolicy a bool variable showing the HMDP will be solved for a given policy.
+#' @param modPolicy a boolean value showing the HMDP is solved for a given policy or not. If we set it to TRUE 
+#' the average rewrad per time unit will be caculted for a given policy "paramPolicy" in functin \code{\link{BuildHMDP2}}. 
+#' if it is set to FALSE, the optimal policy of the HMDP and the related average reward per time unit wil be found.        
 #' @param rewCull A list containing the rewards of culling 1 pig according to the different pork prices.
 #' @param feedWeek A matrix containing the feed intake of sorted pigs for one 1 week.
 #' @param feedCull A matrix containing the feed intake of sorted pigs for marketingLength days.

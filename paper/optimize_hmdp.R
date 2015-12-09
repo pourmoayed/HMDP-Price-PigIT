@@ -31,8 +31,8 @@ param<-setParameters(tMax=15,
                      centerPointsTP = round( seq(9.2,11.2,length=2), 2 ),
                      centerPointsTF = round( seq(1.5,1.7,length=2), 2 ),
                      centerPointsSP = round( seq(-0.4,0.4,length=5), 2 ), #must include 0
-                     centerPointsSPi = round( seq(3.5,3.7,length=5), 2 ), #round( seq(3.5,3.8,length=3), 2 ),
-                     centerPointsSF = round( seq(-0.1,0.1,length=5), 2) #round( seq(-0.1,0.1,length=9), 2)  # #must include 0
+                     centerPointsSPi = round( seq(3.5,3.7,length=5), 2 ), 
+                     centerPointsSF = round( seq(-0.1,0.1,length=5), 2)  # #must include 0
 )
 
 #Estimate the SSMs parameters
