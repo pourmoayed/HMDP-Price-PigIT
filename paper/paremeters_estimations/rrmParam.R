@@ -5,7 +5,8 @@
 
  #read the weight data
 
-  load("pigWeighings")
+  pigWeighings<-read.csv2("pigWeighings.csv")
+  
    weights<-list()
    batches = unique(pigWeighings$InsertionDate)  
    pens = unique(pigWeighings$PigPenName) 
