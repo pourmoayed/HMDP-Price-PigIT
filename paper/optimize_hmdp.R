@@ -1,10 +1,4 @@
-#Note: To be able to run a model with a short time, change the values of
-# centerPointsTP and centerPointsTF in "setParameters" function to:
-# centerPointsTP = round( seq(9.2,11.2,length=2), 2 ),
-# centerPointsTF =  round( seq(1.5,1.7,length=2), 2 ),
-
 library(hmdpPricePigIT)
-
 
 #Estimate the RRM parameters
 source("paremeters_estimations/rrmParam.R", chdir = TRUE)

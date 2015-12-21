@@ -8,7 +8,7 @@ To load the `R` package do
 
 ```{r}
 library(devtools)
-install_github("relund/mdp")
+install_github("relund/mdp@v2.0.1")
 install_github("relund/discretizeNormal/discretizeGaussian")
 install_github("pourmoayed/hmdpPricePigIT", args="--no-multiarch")
 ```
