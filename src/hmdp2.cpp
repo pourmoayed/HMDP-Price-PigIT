@@ -125,6 +125,12 @@ HMDP2::HMDP2(const string prefix, const List param, const List paramDLMP, const 
      n = tmp.nrow(), k = tmp.ncol();
      mPolicy.push_back( arma::mat(tmp.begin(), n, k, true) );
       }
+// read the sample_path 
+//   sample_path = as<arma::mat>(rParam["sample_path"]);
+//  Rcout << "sample_path_length: " << dTP.n_rows << endl;
+  
+
+
   //replace the action for the state that the deviations are not zero, should we consider iMTF in replacing (variation in feed price)?   
       cpuTime.Reset(0); cpuTime.StartTime(0);
       for (int i=0;i<dim;i++){
