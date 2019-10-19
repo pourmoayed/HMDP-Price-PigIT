@@ -6,21 +6,38 @@ library(dplyr)
 #Estimate the RRM parameters
 source("../paremeters_estimations/rrmParam.R", chdir = TRUE)
 
-# define the param 
+givenPolicy <- TRUE
+# small model
 param<-setParameters(tMax=15,
                      pigs=15,
                      tStartMarketing=9,
                      meanWeights = weightMean,
                      sdWeights = weightSd,
-                     modPolicy = TRUE, # we set to TRUE, if HMPD should be solved based on a given policy.  
-                     centerPointsTP= round( seq(9.2,12.2,length=16), 2 ), #, round( seq(9.2,11.2,length=2), 2 ), #, 
-                     centerPointsTF= round( seq(1.5,2.2,length=15), 2 ), # , round( seq(1.5,1.7,length=2), 2 ), #
-                     centerPointsSP= round( seq(-0.4,0.4,length=5), 2 ), #must include 0
-                     centerPointsSPi= round( seq(3.5,3.7,length=5), 2 ), #round( seq(3.5,3.8,length=3), 2 ),
-                     centerPointsSF=round( seq(-0.1,0.1,length=5), 2), #round( seq(-0.1,0.1,length=9), 2)  # #must include 0
+                     modPolicy = givenPolicy, # we set to TRUE, if HMPD should be solved based on a given policy.  
+                     centerPointsTP = round( seq(9.2,11.2,length=2), 2 ),
+                     centerPointsTF = round( seq(1.5,1.7,length=2), 2 ),
+                     centerPointsSP = round( seq(-0.4,0.4,length=5), 2 ), #must include 0
+                     centerPointsSPi = round( seq(3.5,3.7,length=5), 2 ), 
+                     centerPointsSF = round( seq(-0.1,0.1,length=5), 2),   # #must include 0
                      # iMTP = idTP, # index of prior for pork price (when modPolicy = T)
-                     # iMTF = idTF, # index of prior for feed price (when modPolicy = T)
+                     # iMTF = idTF # index of prior for feed price (when modPolicy = T)
 )
+
+## full model 
+# param<-setParameters(tMax=15,
+#                      pigs=15,
+#                      tStartMarketing=9,
+#                      meanWeights = weightMean,
+#                      sdWeights = weightSd,
+#                      modPolicy = TRUE, # we set to TRUE, if HMPD should be solved based on a given policy.  
+#                      centerPointsTP= round( seq(9.2,12.2,length=16), 2 ), #, round( seq(9.2,11.2,length=2), 2 ), #, 
+#                      centerPointsTF= round( seq(1.5,2.2,length=15), 2 ), # , round( seq(1.5,1.7,length=2), 2 ), #
+#                      centerPointsSP= round( seq(-0.4,0.4,length=5), 2 ), #must include 0
+#                      centerPointsSPi= round( seq(3.5,3.7,length=5), 2 ), #round( seq(3.5,3.8,length=3), 2 ),
+#                      centerPointsSF=round( seq(-0.1,0.1,length=5), 2), #round( seq(-0.1,0.1,length=9), 2)  # #must include 0
+#                      # iMTP = idTP, # index of prior for pork price (when modPolicy = T)
+#                      # iMTF = idTF, # index of prior for feed price (when modPolicy = T)
+# )
 
 porkPrice = 9.4
 feedPrice = 1.6
@@ -30,30 +47,53 @@ idTF = findIndex(feedPrice,param$IntervalsTF) # index of prior for feed price ba
 param$iMTP <- idTP
 param$iMTF <- idTF
 
-
 # generate the seed number 
 set.seed(243565745)
 seed_numbers <- runif(100, 1232424, 33435322)
+
+# time_h <- (param$tMax-param$tStartMarketing +2)
+# price_sample_paths <- purrr::map(seed_numbers, .f = function(x){
+#   set.seed(x)
+#   iMTF <- sample(0:(length(param$centerPointsTF)-1), 1)
+#   iMTP <- c()
+#   iMSP <- c()
+#   iMSF <- c()
+#   iMSPi <- c()
+#   sg <- c()
+#   set.seed(x)
+#   for(s in 1:time_h){ #TODO: find the max stage (8)
+#     iMTP[s] <- sample(0:(length(param$centerPointsTP)-1), 1) 
+#     iMSP[s] <- sample(0:(length(param$centerPointsSP)-1), 1)
+#     iMSF[s] <- sample(0:(length(param$centerPointsSF)-1), 1)
+#     iMSPi[s] <- sample(0:(length(param$centerPointsSPi)-1), 1)
+#     sg[s] <- s
+#   }  
+#   data.frame(stage = sg, iMTP = iMTP, iMSP = iMSP, iMTF = rep(iMTF,time_h), iMSF = iMSF, iMSPi = iMSPi)  
+# }) %>% setNames(seed_numbers)
+
+load("paramPolicy")  #if param$modPolicy is set to FALSE, a predefind paramPolicy is loaded but it is not used in the model
 
 time_h <- (param$tMax-param$tStartMarketing +2)
 price_sample_paths <- purrr::map(seed_numbers, .f = function(x){
   set.seed(x)
   iMTF <- sample(0:(length(param$centerPointsTF)-1), 1)
-  iMTP <- c()
-  iMSP <- c()
-  iMSF <- c()
-  iMSPi <- c()
-  set.seed(x)
-  for(s in 1:time_h){ #TODO: find the max stage (8)
-    iMTP[s] <- sample(0:(length(param$centerPointsTP)-1), 1) 
-    iMSP[s] <- sample(0:(length(param$centerPointsSP)-1), 1)
-    iMSF[s] <- sample(0:(length(param$centerPointsSF)-1), 1)
-    iMSPi[s] <- sample(0:(length(param$centerPointsSPi)-1), 1)
-  }  
-  data.frame(iMTF = rep(iMTF,time_h), iMTP = iMTP, iMSP = iMSP, iMSF = iMSF, iMSPi = iMSPi)  
+  df_policy <- paramPolicy[[iMTF+1]] %>% data.frame() %>% dplyr::select(-actionLabel,-n) %>% dplyr::distinct()
+  dat <- plyr::ddply(df_policy, .variables = c("s"), .fun = function(df){
+    if(any(duplicated(df)))
+      stop("duplicated rows in df")
+    dplyr::sample_n(df,1)
+  } ) %>% 
+    dplyr::select(
+      stage = s, 
+      iMTP = TP, 
+      iMSP = SP, 
+      iMTF = TF, 
+      iMSF = SF, 
+      iMSPi = SPi
+    )
 }) %>% setNames(seed_numbers)
 
-param$sample_path <- as.matrix(price_sample_paths[[1]])  
+param$sample_path <- as.matrix(price_sample_paths[[10]])  
 
 #Estimate the SSMs parameters
 source("../paremeters_estimations/ssmParam.R", chdir = TRUE)
