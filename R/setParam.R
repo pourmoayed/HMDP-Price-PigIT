@@ -27,7 +27,7 @@
 #' @param iMTF id of feed price in a given modified policy (without price deviation)
 #' @param iMSF id of feed price deviation in a given modified policy (without price deviation)
 #' @param iMSPi id of piglet price deviation in a given modified policy (without price deviation)
-#' @param sample_path A sample path of price info used for modified policy. 
+#' @param sample_path A matrix for sample path of price info used for modified policy. 
 #' @param centerPointsTP Center points used in the discretization for the trend of pig price estimate.
 #' @param centerPointsTF Center points used in the discretization for the trend of feed price estimate.
 #' @param centerPointsSP Center points used in the discretization for the slope of pig price estimate.
@@ -66,7 +66,7 @@ setParameters<-function(tMax=15,
                         centerPointsSP=round( seq(-0.4,0.4,length=5), 2 ),
                         centerPointsSPi=round( seq(3.45,3.65,length=4), 2 ),
                         centerPointsSF=round( seq(-0.2,0.2,length=5), 2),
-                        sample_path = NA
+                        sample_path = matrix()
                         
 ){
    model<-list(tMax=tMax)   
