@@ -125,24 +125,52 @@ HMDP2::HMDP2(const string prefix, const List param, const List paramDLMP, const 
      n = tmp.nrow(), k = tmp.ncol();
      mPolicy.push_back( arma::mat(tmp.begin(), n, k, true) );
       }
-// read the sample_path 
-//   sample_path = as<arma::mat>(rParam["sample_path"]);
-//  Rcout << "sample_path_length: " << dTP.n_rows << endl;
-  
+     
+// read the sample_path and modify the given policy
+// The order of columns for sample_path is as follows: stage, iMTP, iMSP, iMTF, iMSF, iMSPi
+   sample_path = as<arma::mat>(rParam["sample_path"]);
+   cpuTime.Reset(0); cpuTime.StartTime(0);
+     int iPTP, iPSP, iPTF, iPSF, iPSPi, Psg;
+     for (unsigned int i=0; i<dim; i++){
+        for(unsigned int j = 0; j < mPolicy[i].n_rows ;j++){
+           for(unsigned int k = 0; k < sample_path.n_rows; k++){
+              if(mPolicy[i](j,7) != sample_path(k,0)) continue;
+              if( (mPolicy[i](j,1) != sample_path(k,1)) || (mPolicy[i](j,2) != sample_path(k,2))  || 
+                  (mPolicy[i](j,3) != sample_path(k,3)) ||  (mPolicy[i](j,4) != sample_path(k,4)) || 
+                  (mPolicy[i](j,5) != sample_path(k,5)) ){
+                 iPTP = sample_path(k,1); 
+                 iPSP = sample_path(k,2);
+                 iPTF = sample_path(k,3);
+                 iPSF = sample_path(k,4); 
+                 iPSPi = sample_path(k,5); 
+                 Psg = sample_path(k,0);
+                 rowNum = findIndice(mPolicy[iPTF], iPTP, iPSP, iPTF, iPSF, iPSPi, mPolicy[i](j,6) , Psg); 
+                 // Rcout << " rowNum: " << rowNum << " iPTF " << iPTF << " iPSF " << 
+                 //    iPSF << " iPTP " << iPTP << " iPSP " << iPSP <<  " iPSPi " << iPSPi << "Psg" << Psg << endl; 
+                 
+                 mPolicy[i](j,0)=mPolicy[iPTF](rowNum,0);
+                 // Rcout << " mPolicy[i](j,) " << mPolicy[i].row(j) << " sample_path(k,): " << sample_path.row(k) << endl;
+              }
+           }
+        }
+     }
+     Rcout << "Time for modifying " << cpuTime.StopAndGetTotalTimeDiff(0) << endl;
+     
+     
 
 
   //replace the action for the state that the deviations are not zero, should we consider iMTF in replacing (variation in feed price)?   
-      cpuTime.Reset(0); cpuTime.StartTime(0);
-      for (int i=0;i<dim;i++){
-        for(unsigned int j=0;j<mPolicy[i].n_rows ;j++){
-                 if( (mPolicy[i](j,1)!=iMTP) || (mPolicy[i](j,2)!=iMSP)  || (mPolicy[i](j,3)!=iMTF) ||  (mPolicy[i](j,4)!=iMSF) || (mPolicy[i](j,5)!=iMSPi) ){
-                   rowNum = findIndice(mPolicy[iMTF], iMTP, iMSP, iMTF, iMSF, iMSPi, mPolicy[i](j,6) , mPolicy[i](j,7) ); 
-                   mPolicy[i](j,0)=mPolicy[iMTF](rowNum,0);                   
-           }
-        }
-                              
-      }
-          Rcout << "Time for modifying " << cpuTime.StopAndGetTotalTimeDiff(0) << endl;
+      // cpuTime.Reset(0); cpuTime.StartTime(0);
+      // for (int i=0;i<dim;i++){
+      //   for(unsigned int j=0;j<mPolicy[i].n_rows ;j++){
+      //            if( (mPolicy[i](j,1)!=iMTP) || (mPolicy[i](j,2)!=iMSP)  || (mPolicy[i](j,3)!=iMTF) ||  (mPolicy[i](j,4)!=iMSF) || (mPolicy[i](j,5)!=iMSPi) ){
+      //              rowNum = findIndice(mPolicy[iMTF], iMTP, iMSP, iMTF, iMSF, iMSPi, mPolicy[i](j,6) , mPolicy[i](j,7) ); 
+      //              mPolicy[i](j,0)=mPolicy[iMTF](rowNum,0);                   
+      //      }
+      //   }
+      //                         
+      // }
+      //     Rcout << "Time for modifying " << cpuTime.StopAndGetTotalTimeDiff(0) << endl;
         
     }
         
