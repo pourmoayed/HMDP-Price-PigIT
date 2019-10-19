@@ -51,28 +51,7 @@ param$iMTF <- idTF
 set.seed(243565745)
 seed_numbers <- runif(100, 1232424, 33435322)
 
-# time_h <- (param$tMax-param$tStartMarketing +2)
-# price_sample_paths <- purrr::map(seed_numbers, .f = function(x){
-#   set.seed(x)
-#   iMTF <- sample(0:(length(param$centerPointsTF)-1), 1)
-#   iMTP <- c()
-#   iMSP <- c()
-#   iMSF <- c()
-#   iMSPi <- c()
-#   sg <- c()
-#   set.seed(x)
-#   for(s in 1:time_h){ #TODO: find the max stage (8)
-#     iMTP[s] <- sample(0:(length(param$centerPointsTP)-1), 1) 
-#     iMSP[s] <- sample(0:(length(param$centerPointsSP)-1), 1)
-#     iMSF[s] <- sample(0:(length(param$centerPointsSF)-1), 1)
-#     iMSPi[s] <- sample(0:(length(param$centerPointsSPi)-1), 1)
-#     sg[s] <- s
-#   }  
-#   data.frame(stage = sg, iMTP = iMTP, iMSP = iMSP, iMTF = rep(iMTF,time_h), iMSF = iMSF, iMSPi = iMSPi)  
-# }) %>% setNames(seed_numbers)
-
-load("paramPolicy")  #if param$modPolicy is set to FALSE, a predefind paramPolicy is loaded but it is not used in the model
-
+load("paramPolicy")  
 time_h <- (param$tMax-param$tStartMarketing +2)
 price_sample_paths <- purrr::map(seed_numbers, .f = function(x){
   set.seed(x)
