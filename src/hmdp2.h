@@ -378,6 +378,7 @@ private:   // variables
    int iMSP;
    int iMSF;
    int iMSPi;
+   arma::mat sample_path;
    
    vector<arma::mat> mPolicy; // a vector to store the given policy for each child
    
