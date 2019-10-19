@@ -1,6 +1,7 @@
 
 library(hmdpPricePigIT)
 library(data.table)
+library(dplyr)
 
 #Estimate the RRM parameters
 source("../paremeters_estimations/rrmParam.R", chdir = TRUE)
@@ -17,19 +18,18 @@ param<-setParameters(tMax=15,
                      centerPointsSP= round( seq(-0.4,0.4,length=5), 2 ), #must include 0
                      centerPointsSPi= round( seq(3.5,3.7,length=5), 2 ), #round( seq(3.5,3.8,length=3), 2 ),
                      centerPointsSF=round( seq(-0.1,0.1,length=5), 2), #round( seq(-0.1,0.1,length=9), 2)  # #must include 0
-                     iMTP = idTP, # index of prior for pork price (when modPolicy = T)
-                     iMTF = idTF, # index of prior for feed price (when modPolicy = T)
+                     # iMTP = idTP, # index of prior for pork price (when modPolicy = T)
+                     # iMTF = idTF, # index of prior for feed price (when modPolicy = T)
 )
 
 porkPrice = 9.4
-feedPrice = 1.6  
+feedPrice = 1.6
 #find the index id of pork and feed prices: 
-idTP = 2; #index of pork price (predefined values)
-idTF = 2; # index of feed price (predefined values) 
-if(givenPolicy){
-  idTP = findIndex(porkPrice,param$IntervalsTP) # index of prior for pork price based on price setting (when modPolicy = T)
-  idTF = findIndex(feedPrice,param$IntervalsTF) # index of prior for feed price based on price setting (when modPolicy = T)
-}
+idTP = findIndex(porkPrice,param$IntervalsTP) # index of prior for pork price based on price setting (when modPolicy = T)
+idTF = findIndex(feedPrice,param$IntervalsTF) # index of prior for feed price based on price setting (when modPolicy = T)
+param$iMTP <- idTP
+param$iMTF <- idTF
+
 
 # generate the seed number 
 set.seed(243565745)
@@ -53,7 +53,7 @@ price_sample_paths <- purrr::map(seed_numbers, .f = function(x){
   data.frame(iMTF = rep(iMTF,time_h), iMTP = iMTP, iMSP = iMSP, iMSF = iMSF, iMSPi = iMSPi)  
 }) %>% setNames(seed_numbers)
 
-param$sample_path <- price_sample_paths[[1]]
+param$sample_path <- as.matrix(price_sample_paths[[1]])  
 
 #Estimate the SSMs parameters
 source("../paremeters_estimations/ssmParam.R", chdir = TRUE)
