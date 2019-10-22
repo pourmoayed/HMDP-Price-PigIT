@@ -351,6 +351,7 @@ private:   // variables
    double convRateSd;
    
    bool modPolicy; 
+   bool sample_path_given;
 
    arma::vec sdWeights;           
    arma::vec meanWeights;
