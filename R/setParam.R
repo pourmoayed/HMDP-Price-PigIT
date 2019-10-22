@@ -18,7 +18,8 @@
 #' @param sdGrowth Standard deviation of growth during the growing period in the RRM model.
 #' @param modPolicy a boolean value showing the HMDP is solved for a given policy or not. If we set it to TRUE 
 #' the average rewrad per time unit will be caculted for a given policy "paramPolicy" in functin \code{\link{BuildHMDP2}}. 
-#' if it is set to FALSE, the optimal policy of the HMDP and the related average reward per time unit wil be found.        
+#' if it is set to FALSE, the optimal policy of the HMDP and the related average reward per time unit wil be found.
+#' @param sample_path_given True if a sample path of prices is used for solving HMDP under given prices. Otherwise fixes pricesed will be used.            
 #' @param rewCull A list containing the rewards of culling 1 pig according to the different pork prices.
 #' @param feedWeek A matrix containing the feed intake of sorted pigs for one 1 week.
 #' @param feedCull A matrix containing the feed intake of sorted pigs for marketingLength days.
@@ -49,6 +50,7 @@ setParameters<-function(tMax=15,
                         marketingLength=3, # unit is day
                         pigletLeadTime=1,  # unit is week
                         modPolicy=FALSE,
+                        sample_path_given=FALSE,
                         rewCull = list(),
                         feedWeek = matrix(),
                         feedCull = matrix(),
@@ -86,6 +88,7 @@ setParameters<-function(tMax=15,
    model$meanGrowth<-meanGrowth            
    model$sdGrowth<-sdGrowth   
    model$modPolicy<-modPolicy
+   model$sample_path_given <-sample_path_given
    model$rewCull<-rewCull
    model$feedWeek<-feedWeek
    model$feedCull<-feedCull
