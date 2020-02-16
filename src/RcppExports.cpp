@@ -63,6 +63,22 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// BuildHMDP2Deterministic
+SEXP BuildHMDP2Deterministic(const CharacterVector filePrefix, const List param, const List paramDLMP, const List paramDLMPi, const List paramDLMF, const List paramPolicy);
+RcppExport SEXP hmdpPricePigIT_BuildHMDP2Deterministic(SEXP filePrefixSEXP, SEXP paramSEXP, SEXP paramDLMPSEXP, SEXP paramDLMPiSEXP, SEXP paramDLMFSEXP, SEXP paramPolicySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const CharacterVector >::type filePrefix(filePrefixSEXP);
+    Rcpp::traits::input_parameter< const List >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< const List >::type paramDLMP(paramDLMPSEXP);
+    Rcpp::traits::input_parameter< const List >::type paramDLMPi(paramDLMPiSEXP);
+    Rcpp::traits::input_parameter< const List >::type paramDLMF(paramDLMFSEXP);
+    Rcpp::traits::input_parameter< const List >::type paramPolicy(paramPolicySEXP);
+    __result = Rcpp::wrap(BuildHMDP2Deterministic(filePrefix, param, paramDLMP, paramDLMPi, paramDLMF, paramPolicy));
+    return __result;
+END_RCPP
+}
 // SimulatePigs
 SEXP SimulatePigs(const int& pigs, const int& samples, const int& weeks, const arma::vec& prices, const arma::mat& V, const arma::mat& B, const arma::mat& R);
 RcppExport SEXP hmdpPricePigIT_SimulatePigs(SEXP pigsSEXP, SEXP samplesSEXP, SEXP weeksSEXP, SEXP pricesSEXP, SEXP VSEXP, SEXP BSEXP, SEXP RSEXP) {

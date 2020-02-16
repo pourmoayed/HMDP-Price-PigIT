@@ -73,6 +73,22 @@ BuildHMDP2 <- function(filePrefix, param, paramDLMP, paramDLMPi, paramDLMF, para
     .Call('hmdpPricePigIT_BuildHMDP2', PACKAGE = 'hmdpPricePigIT', filePrefix, param, paramDLMP, paramDLMPi, paramDLMF, paramPolicy)
 }
 
+#' Build a deterministic HMDP (2 levels with shared linking) using the C++ binary writer. 
+#' 
+#' @param filePrefix Prefix used by the binary files storing the MDP model.
+#' @param param Model parameters of the HMDP.
+#' @param paramDLMPi A list including the parameters for the DLMW (DLM for weigh information). 
+#' @param paramDLMP A list including the parameters for the DLMP (DLM for pork price information). 
+#' @param paramDLMF A list including the parameters for the DLMF (DLM for feed price information) 
+#' @param paramPolicy A given policy for the hmdp. In finding the optimal policy of the HMDP, this policy will not be used. 
+#' 
+#' @return Build log (character).
+#' @author Lars Relund \email{lars@@relund.dk}, Reza Pourmoayed \email{rpourmoayed@@econ.au.dk}
+#' @export
+BuildHMDP2Deterministic <- function(filePrefix, param, paramDLMP, paramDLMPi, paramDLMF, paramPolicy) {
+    .Call('hmdpPricePigIT_BuildHMDP2Deterministic', PACKAGE = 'hmdpPricePigIT', filePrefix, param, paramDLMP, paramDLMPi, paramDLMF, paramPolicy)
+}
+
 #' Calculate the reward of seeling and the feed intake of the pigs in an unselected pen using simulation.
 #' 
 #' @param pigs Number of pigs in the pen.
