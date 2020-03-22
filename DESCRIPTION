@@ -1,7 +1,7 @@
 Package: hmdpPricePigIT
 Type: Package
 Title: Slaughter pig marketing under price fluctuations
-Version: 1.0
+Version: 1.1
 Date: 2015-12-01
 Authors@R: c( 
   person("Lars", "Relund", email = "lars@relund.dk", role = c("aut") ), 
