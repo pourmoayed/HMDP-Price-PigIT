@@ -99,12 +99,14 @@ if(useScenariosPaper){
 plot<-ggplot(data=dat, aes(x=factor(t), y=y, group=name, shape=name, linetype=name ) ) + 
   geom_line() + scale_y_continuous(breaks=seq(-2,15,1), labels = c("","$a^*$",0:15) ) +
   #geom_point() + 
+  scale_linetype_manual(values=c("solid", "dotted", "longdash", "dotdash")) +
   facet_grid(. ~ scenario) + 
   xlab("week numbers") + ylab(" ") 
 g <- guide_legend("",nrow=1,byrow=TRUE, override.aes = list(fill=NA))
 
-plot + guides(shape = g, linetype=g)  + 
-  geom_histogram(stat="identity", data=datPigs, alpha = 1/4, colour=NA, width=0.25) + 
+plot + 
+  guides(shape = g, linetype=g)  + 
+  geom_histogram(stat="identity", data=datPigs, alpha = 1/4, colour=NA, width=0.25, linetype = 0) + 
   #  geom_vline(aes(xintercept = w), data=vline.fm, color="gray") + 
   #  geom_vline(aes(xintercept = w), data=vline.th, color="gray", linetype="twodash") +
   geom_line() +
