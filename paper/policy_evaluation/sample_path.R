@@ -144,18 +144,66 @@ if(full_size){
 # We remove one outlier from the results of sample path (one extreme negative value). 
 g_sample_paths <- g
 
-plot_data <- data.frame(x=1:length(g_sample_paths), y=g_sample_paths)
+# plot_data <- data.frame(x=1:length(g_sample_paths), y=g_sample_paths)
+# 
+# tikz("plot_sample_path.tex", width = 10, height = 7, standAlone=F)
+# ggplot2::ggplot(plot_data, aes(x=x, y=y)) +
+#   ggplot2::geom_point() +
+#   xlab("Sample paths") + ylab("Expected reward per time unit(DKK)") +
+#   ggplot2::geom_hline(yintercept = g_opt_ssm, linetype="twodash") +
+#   theme_bw() +  
+#  theme(axis.text=element_text(size=12),
+#        axis.title.x=element_text(size=16),
+#        axis.title.y=element_text(size=16))
+# dev.off()
 
-tikz("plot_sample_path.tex", width = 10, height = 7, standAlone=F)
-ggplot2::ggplot(plot_data, aes(x=x, y=y)) +
-  ggplot2::geom_point() +
-  xlab("Sample paths") + ylab("Expected reward per time unit(DKK)") +
+
+
+g_values <- data.frame(model_1 = g_values_Model1$g_model1, model_2 = g_values_Model2$g_model2)
+plot_dat <- reshape2::melt(g_values) %>%
+  dplyr::mutate(variable = ifelse(variable == "model_1", "Model I", "Model II"))
+
+tikzDevice::tikz("plot_g_distribution.tex", width = 10, height = 7, standAlone=F)
+ggplot2::ggplot(plot_dat, aes( x = variable ,y = value)) +
+  ggplot2::geom_boxplot() +
+  ggplot2::geom_point(size = 1) +
+  xlab("") + ylab("Average reward per time unit") +
   ggplot2::geom_hline(yintercept = g_opt_ssm, linetype="twodash") +
-  theme_bw() +  
- theme(axis.text=element_text(size=12),
-       axis.title.x=element_text(size=16),
-       axis.title.y=element_text(size=16))
+  theme_bw() +
+  theme(axis.text=element_text(size=12),
+        axis.title.x=element_text(size=16),
+        axis.title.y=element_text(size=16))
 dev.off()
+
+
+mu <- plot_dat %>% 
+  dplyr::group_by(variable) %>%
+  dplyr::summarise(grp.mean = mean(value)) 
+
+#y = ..count.., 
+tikzDevice::tikz("plot_g_distribution1.tex", width = 10, height = 7, standAlone=F)
+ggplot2::ggplot(plot_dat, aes(x = value)) + 
+  geom_density(aes(fill = variable), alpha = 0.4) +
+  geom_vline(aes(xintercept = grp.mean, color = variable),
+             data = mu, linetype = "dashed") +
+  scale_color_manual(values = c("gray27", "gray65"))+
+  scale_fill_manual(values = c("gray27", "gray65")) + 
+  xlab("Average reward per time unit(g)") + ylab("Density") + 
+  ggplot2::geom_vline(xintercept = g_opt_ssm) + 
+  scale_x_continuous(breaks = seq(-100, 500, by = 50)) + 
+  theme_bw() + 
+  theme(legend.position="bottom",
+        legend.title=element_blank(),
+        panel.background = element_blank(), 
+        panel.grid.minor=element_blank(), 
+        panel.grid.major=element_blank(),
+        #legend.key = element_rect(fill = NA, colour = NA),
+        #legend.key.width = unit(2, "cm"), legend.text.align=0.5, axis.title.x= element_text(vjust = -0.7),
+        strip.background=element_rect(fill = NA))
+dev.off()
+
+
+
   
 VOI <- g_opt_ssm - g_sample_paths
 summary(VOI)
