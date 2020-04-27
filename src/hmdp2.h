@@ -394,6 +394,7 @@ private:   // variables
    
    bool modPolicy; 
    bool sample_path_given;
+   bool rolling_horizon_model;
 
    arma::vec sdWeights;           
    arma::vec meanWeights;

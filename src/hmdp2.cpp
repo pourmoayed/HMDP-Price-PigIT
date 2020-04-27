@@ -28,6 +28,7 @@ HMDP2::HMDP2(const string prefix, const List param, const List paramDLMP, const 
    sdGrowth = as<arma::vec>(rParam["sdGrowth"]);
    modPolicy = as<bool>(rParam["modPolicy"]);
    sample_path_given = as<bool>(rParam["sample_path_given"]);
+   rolling_horizon_model = as<bool>(rParam["rolling_horizon_model"]);
    iMTP = as<int>(rParam["iMTP"]);
    iMTF = as<int>(rParam["iMTF"]);
    iMSP = as<int>(rParam["iMSP"]);
@@ -947,7 +948,7 @@ void HMDP2::BuildL1ProcessDeterministic(int & iFeed) {
 
 // ===================================================
 
-void HMDP2::BuildMapL2VectorDeterministic(int stage) {   //  mapL2Vector[iTP][iSP][iSF][iSPi][n]
+void HMDP2::BuildMapL2VectorDeterministic(int stage) {
    int n,idL2;
    // level 2
    idL2=0;
@@ -991,8 +992,11 @@ SEXP HMDP2::BuildHMDPDeterministic(){
    w.Stage();
    w.State(label);
    w.Action(scope, index, pr, weights, label, false);
-   BuildL1ProcessDeterministicPriceFixed(iTFt);
-   // BuildL1ProcessDeterministic(iTFt);
+   if(rolling_horizon_model){
+      BuildL1ProcessDeterministicPriceFixed(iTFt);
+   }else{
+      BuildL1ProcessDeterministic(iTFt);
+   }
    w.EndAction();
    w.EndState();
    w.EndStage();
