@@ -20,6 +20,7 @@
 #' the average rewrad per time unit will be caculted for a given policy "paramPolicy" in functin \code{\link{BuildHMDP2}}. 
 #' if it is set to FALSE, the optimal policy of the HMDP and the related average reward per time unit wil be found.
 #' @param sample_path_given True if a sample path of prices is used for solving HMDP under given prices. Otherwise fixes pricesed will be used.            
+#' @param rolling_horizon_model True if rolling horizom model is used where future prices are assumed the same as in the current epoch given a sample path.
 #' @param rewCull A list containing the rewards of culling 1 pig according to the different pork prices.
 #' @param feedWeek A matrix containing the feed intake of sorted pigs for one 1 week.
 #' @param feedCull A matrix containing the feed intake of sorted pigs for marketingLength days.
@@ -51,6 +52,7 @@ setParameters<-function(tMax=15,
                         pigletLeadTime=1,  # unit is week
                         modPolicy=FALSE,
                         sample_path_given=FALSE,
+                        rolling_horizon_model = FALSE,
                         rewCull = list(),
                         feedWeek = matrix(),
                         feedCull = matrix(),
@@ -89,6 +91,7 @@ setParameters<-function(tMax=15,
    model$sdGrowth<-sdGrowth   
    model$modPolicy<-modPolicy
    model$sample_path_given <-sample_path_given
+   model$rolling_horizon_model <- rolling_horizon_model
    model$rewCull<-rewCull
    model$feedWeek<-feedWeek
    model$feedCull<-feedCull
