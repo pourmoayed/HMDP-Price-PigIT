@@ -50,6 +50,18 @@ public:  // methods
     */
    SEXP BuildHMDP();
    
+   /** Build a deterministic HMDP (to binary files) given a sample path  
+    *  
+    *  Build a 2 level HMDP saved in binary files by using the 
+    *  binaryMDPWriter (c++ version). 
+    *  
+    *  @return Build log (string)
+    *  @author Lars Relund \email{lars@@relund.dk}
+    *  @export
+    */
+   SEXP BuildHMDPDeterministic();
+   
+   
     /** Create the process at level 1 for orginal model
     * @param iFeed Index of state variable for trend of feed price at time t.
     */   
@@ -60,7 +72,7 @@ public:  // methods
     * @param iFeed Index of state variable for trend of feed price at time t.
     */   
     SEXP BuildL1ProcessMPolicy(int & iFeed);
-   
+
    
    /** Count the number of states in the HMDP */
    int countStatesHMDP() {
@@ -332,6 +344,36 @@ private:
             }
       return (x);
     }
+   
+   
+   /** Create the process at level 1 based on a given sample path (deterministic HMDP)
+    * @param iFeed Index of state variable for trend of feed price at time t.
+    */   
+   void BuildL1ProcessDeterministic(int & iFeed);
+   
+   
+   /** Build a map of the index of states for the given stage in the second level, used for deterministic HMDP given a sample path. 
+    * That is, the map to identify state id in the second level given the current stage.
+    * 
+    * @param stage Stage number to build the map.
+    */
+   void BuildMapL2VectorDeterministic(int stage);
+   
+   /** Create the process at level 1 based on a given sample path (deterministic HMDP) and fixed future prices
+    * @param iFeed Index of state variable for trend of feed price at time t.
+    */   
+   void BuildL1ProcessDeterministicPriceFixed(int & iFeed);
+   
+   
+   /** Build a map of the index of states for the given stage in the second level, used for deterministic HMDP given a sample path and fixed future prices. 
+    * That is, the map to identify state id in the second level given the current stage.
+    * 
+    * @param stage Stage number to build the map.
+    */
+   void BuildMapL2VectorDeterministicpPriceFixed(int stage);
+   
+   
+   
     
 
 private:   // variables
@@ -351,6 +393,8 @@ private:   // variables
    double convRateSd;
    
    bool modPolicy; 
+   bool sample_path_given;
+   bool rolling_horizon_model;
 
    arma::vec sdWeights;           
    arma::vec meanWeights;
@@ -378,6 +422,7 @@ private:   // variables
    int iMSP;
    int iMSF;
    int iMSPi;
+   arma::mat sample_path;
    
    vector<arma::mat> mPolicy; // a vector to store the given policy for each child
    
@@ -408,6 +453,10 @@ private:   // variables
    vector< vector < vector <vector <vector <double> > > > > weightCull; // weightCull[s][cull][iTP][iTF][n] reward of hmdp for all actions.  
    vector< vector < vector< vector< vector<int> > > > > mapL2Vector; //mapL2Vector[iTP][iSP][iSF][iSPi][n] map of states in the second level. 
    vector< vector< vector<int> > > mapLVector; //mapLVector[iTP][iTF][iSPi] map of states in the first level.
+   
+   map<int,int> mapL2D; //used for deterministic HMDP
+   map<string,int> mapL2DF; //used for deterministic HMDP and fixed future price 
+   
         
    string label;
    string processLabel;

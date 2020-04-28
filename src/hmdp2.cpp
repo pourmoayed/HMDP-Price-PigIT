@@ -27,6 +27,8 @@ HMDP2::HMDP2(const string prefix, const List param, const List paramDLMP, const 
    meanGrowth = as<arma::vec>(rParam["meanGrowth"]);      
    sdGrowth = as<arma::vec>(rParam["sdGrowth"]);
    modPolicy = as<bool>(rParam["modPolicy"]);
+   sample_path_given = as<bool>(rParam["sample_path_given"]);
+   rolling_horizon_model = as<bool>(rParam["rolling_horizon_model"]);
    iMTP = as<int>(rParam["iMTP"]);
    iMTF = as<int>(rParam["iMTF"]);
    iMSP = as<int>(rParam["iMSP"]);
@@ -125,18 +127,56 @@ HMDP2::HMDP2(const string prefix, const List param, const List paramDLMP, const 
      n = tmp.nrow(), k = tmp.ncol();
      mPolicy.push_back( arma::mat(tmp.begin(), n, k, true) );
       }
-  //replace the action for the state that the deviations are not zero, should we consider iMTF in replacing (variation in feed price)?   
+     
+// read the sample_path and modify the given policy
+// The order of columns for sample_path is as follows: stage, iMTP, iMSP, iMTF, iMSF, iMSPi
+   if(modPolicy & sample_path_given){
+      sample_path = as<arma::mat>(rParam["sample_path"]);
       cpuTime.Reset(0); cpuTime.StartTime(0);
-      for (int i=0;i<dim;i++){
+      // int iPTP, iPSP, iPTF, iPSF, iPSPi, Psg;
+      // for (unsigned int i=0; i<dim; i++){
+      //    for(unsigned int j = 0; j < mPolicy[i].n_rows ;j++){
+      //       for(unsigned int k = 0; k < sample_path.n_rows; k++){
+      //          if(mPolicy[i](j,7) != sample_path(k,0)) continue;
+      //          if( (mPolicy[i](j,1) != sample_path(k,1)) || (mPolicy[i](j,2) != sample_path(k,2))  || 
+      //              (mPolicy[i](j,3) != sample_path(k,3)) ||  (mPolicy[i](j,4) != sample_path(k,4)) || 
+      //              (mPolicy[i](j,5) != sample_path(k,5)) ){
+      //             iPTP = sample_path(k,1); 
+      //             iPSP = sample_path(k,2);
+      //             iPTF = sample_path(k,3);
+      //             iPSF = sample_path(k,4); 
+      //             iPSPi = sample_path(k,5); 
+      //             Psg = sample_path(k,0);
+      //             rowNum = findIndice(mPolicy[iPTF], iPTP, iPSP, iPTF, iPSF, iPSPi, mPolicy[i](j,6) , Psg); 
+      //             // Rcout << " rowNum: " << rowNum << " iPTF " << iPTF << " iPSF " << 
+      //             //    iPSF << " iPTP " << iPTP << " iPSP " << iPSP <<  " iPSPi " << iPSPi << "Psg" << Psg << endl; 
+      //             
+      //             mPolicy[i](j,0)=mPolicy[iPTF](rowNum,0);
+      //             // Rcout << " mPolicy[i](j,) " << mPolicy[i].row(j) << " sample_path(k,): " << sample_path.row(k) << endl;
+      //          }
+      //       }
+      //    }
+      // }
+      Rcout << "Time for modifying " << cpuTime.StopAndGetTotalTimeDiff(0) << endl;
+   }
+     
+     
+
+
+  //replace the action for the state that the deviations are not zero, 
+  if(modPolicy & !sample_path_given){
+     cpuTime.Reset(0); cpuTime.StartTime(0);
+     for (int i=0;i<dim;i++){
         for(unsigned int j=0;j<mPolicy[i].n_rows ;j++){
-                 if( (mPolicy[i](j,1)!=iMTP) || (mPolicy[i](j,2)!=iMSP)  || (mPolicy[i](j,3)!=iMTF) ||  (mPolicy[i](j,4)!=iMSF) || (mPolicy[i](j,5)!=iMSPi) ){
-                   rowNum = findIndice(mPolicy[iMTF], iMTP, iMSP, iMTF, iMSF, iMSPi, mPolicy[i](j,6) , mPolicy[i](j,7) ); 
-                   mPolicy[i](j,0)=mPolicy[iMTF](rowNum,0);                   
+           if( (mPolicy[i](j,1)!=iMTP) || (mPolicy[i](j,2)!=iMSP)  || (mPolicy[i](j,3)!=iMTF) ||  (mPolicy[i](j,4)!=iMSF) || (mPolicy[i](j,5)!=iMSPi) ){
+              rowNum = findIndice(mPolicy[iMTF], iMTP, iMSP, iMTF, iMSF, iMSPi, mPolicy[i](j,6) , mPolicy[i](j,7) );
+              mPolicy[i](j,0)=mPolicy[iMTF](rowNum,0);
            }
         }
-                              
-      }
-          Rcout << "Time for modifying " << cpuTime.StopAndGetTotalTimeDiff(0) << endl;
+        
+     }
+     Rcout << "Time for modifying " << cpuTime.StopAndGetTotalTimeDiff(0) << endl;
+  }  
         
     }
         
@@ -481,6 +521,7 @@ SEXP HMDP2::BuildL1ProcessMPolicy(int & iFeed) {
      return wrap(w.log.str());        
  }
 
+
 // ===================================================
 void HMDP2::CalcTransPrCont(int & iTPt, int & iSPt, int & iTFt, int & iSFt, int & iSPit, int & nt, int & s){
    double pr4;
@@ -808,3 +849,328 @@ void HMDP2::CalcTransPrTermPi() {   // prTermPi[s][iSPit][iSPi]
    }
     Rcout << "Time for calculating PrTermPi: " << cpuTime.StopAndGetTotalTimeDiff(0) << endl;
 }
+
+
+
+
+// ===================================================
+
+void HMDP2::BuildL1ProcessDeterministic(int & iFeed) {
+   
+   // The order of columns for sample_path is as follows: stage, iMTP, iMSP, iMTF, iMSF, iMSPi
+   int s, n, cull, iTP, iSP, iSF, iSPi, nN, idN;
+
+   w.Process(); // level 2
+   
+   DBG4("process: " <<iFeed+1<<endl)
+      
+      for(s = 1; s<=(lastStage); s++) {
+         
+         BuildMapL2VectorDeterministic(s+1);
+         
+         //finding indexes in the sample path 
+         iTP = sample_path(s-1,1);
+         iSP = sample_path(s-1,2);
+         iSF = sample_path(s-1,4); 
+         iSPi = sample_path(s-1,5);
+         
+         w.Stage();
+                     for(n=1; n<=pigs; n++){
+                        if( ( (s==1) || (s==2) ) & (n!=pigs) ) continue;
+                        label = getLabel(iTP,iSP,iFeed,iSF,iSPi,n,s);
+                        w.State(label);
+                        
+                        // continue action
+                        if ( (s!=lastStage) ){
+                           pr.clear(); index.clear(); scope.clear();
+                           idN = mapL2D[n];
+                           // DBG4(" con. " <<" idN: " <<idN<< " n: "<< n << " s: " << s << endl)
+                           scope.assign(1,1);
+                           pr.assign(1,1);
+                           index.assign(1,idN);
+                           weights.assign(2,0);
+                           cull=0;
+                           if(s==1){
+                              weights[0] = tStartMarketing - 1;
+                           }
+                           if(s!=1){
+                              weights[0] = 1;
+                           }                                  
+                           weights[1]=weightCull[s][cull][iTP][iFeed][n];
+                           w.Action(scope, index, pr, weights, "cont.", true);
+                        }
+                        
+                        //Individual marketing actions
+                        if ( (s>=2) & (s!=lastStage) & (n>minMarketingSize) ){
+                           for (cull=1; cull<=n; cull++) {
+                              pr.clear(); index.clear(); scope.clear();
+                              if(cull != n) {  // have not culled all pigs
+                                 nN = n - cull;
+                                 idN = mapL2D[nN];
+                                 scope.assign(1,1);
+                                 pr.assign(1,1);
+                                 index.assign(1,idN);
+                                 weights.assign(2,0);
+                                 weights[0]=1;
+                                 weights[1]=weightCull[s][cull][iTP][iFeed][n];
+                              }else{  // cull all pigs
+                                 scope.assign(1,0);
+                                 pr.assign(1,1);
+                                 index.assign(1,0);
+                                 weights.assign(2,0);
+                                 weights[0]=1;
+                                 weights[1]=weightCull[s][cull][iTP][iFeed][n];
+                              }
+                              label = ToString<double>(cull);
+                              w.Action(scope, index, pr, weights, label, true);
+                           }                                     
+                        }
+                        
+                        // terminate action at the last satge 
+                        if( s==lastStage ){
+                           pr.clear(); index.clear(); scope.clear();
+                           cull = n; 
+                           scope.assign(1,0);
+                           pr.assign(1,1);
+                           index.assign(1,0);
+                           weights.assign(2,0);
+                           weights[0]=1;
+                           weights[1]=weightCull[s][cull][iTP][iFeed][n];
+                           w.Action(scope, index, pr, weights, "term.", true);
+                        }
+                        w.EndState();
+                     }
+         w.EndStage();
+      }
+   w.EndProcess(); // end level
+}
+
+
+// ===================================================
+
+void HMDP2::BuildMapL2VectorDeterministic(int stage) {
+   int n,idL2;
+   // level 2
+   idL2=0;
+   mapL2D.clear();
+   
+               for(n=1; n<=pigs; n++){
+                  if( ( (stage==1) || (stage==2) ) & (n!=pigs) ) continue;
+                  mapL2D[n] = idL2;
+                  idL2++;
+   }
+}
+
+
+// ===================================================
+
+SEXP HMDP2::BuildHMDPDeterministic(){ 
+   
+   // The order of columns for sample_path is as follows: stage, iMTP, iMSP, iMTF, iMSF, iMSPi
+   
+   lastStage =tMax-tStartMarketing +2;
+   CalcWeightMarket();
+   
+   int iTPt, iTFt, iSPit;
+   iTPt = sample_path(0,1); 
+   iTFt =  sample_path(0,3);  
+   iSPit = sample_path(0,5);
+   label = getLabel(iTPt, iTFt, iSPit);
+   
+   Rcout << "Start writing to binary files ... \n";
+   w.SetWeight("Time");
+   w.SetWeight("Reward");
+   
+   pr.clear(); index.clear(); scope.clear();
+   scope.assign(1,2);
+   pr.assign(1,1);
+   index.assign(1,0);
+   weights.assign(2,0);
+   weights[1] = -(exp(sSPi[iSPit])*sTP[iTPt])*pigs;;
+   
+   w.Process();    // level 0 (founder)
+   w.Stage();
+   w.State(label);
+   w.Action(scope, index, pr, weights, label, false);
+   if(rolling_horizon_model){
+      BuildL1ProcessDeterministicPriceFixed(iTFt);
+   }else{
+      BuildL1ProcessDeterministic(iTFt);
+   }
+   w.EndAction();
+   w.EndState();
+   w.EndStage();
+   w.EndProcess();  // end level 1 (founder)
+   w.CloseWriter();
+   Rcout << "... finished writing to binary files.\n";
+   return wrap(w.log.str());
+}
+
+
+// ===================================================
+
+void HMDP2::BuildL1ProcessDeterministicPriceFixed(int & iFeed) {
+   
+   // The order of columns for sample_path is as follows: stage, iMTP, iMSP, iMTF, iMSF, iMSPi
+   int s, ss, n, cull, iTP, iSP, iSF, iSPi, nN, idN;
+   int iTPx, iSPx, iSFx, iSPix;
+   vector<int> iTPSet, iSPSet, iSFSet, iSPiSet;
+   
+   w.Process(); // level 2
+   
+   DBG4("process: " <<iFeed+1<<endl)
+      
+      for(s = 1; s<=(lastStage); s++) {
+         
+         if(s != lastStage)
+            BuildMapL2VectorDeterministicpPriceFixed(s+1);
+         
+         //fill possible states sets
+         iTPSet.clear(); iSPSet.clear(); iSFSet.clear(); iSPiSet.clear();
+         for(ss=1; ss<=s; ss++){
+            iTPSet.push_back(sample_path(ss-1,1));
+            iSPSet.push_back(sample_path(ss-1,2));
+            iSFSet.push_back(sample_path(ss-1,4));
+            iSPiSet.push_back(sample_path(ss-1,5));
+         }
+         w.Stage();
+         for(iTPx = 0; iTPx<iTPSet.size(); iTPx++){
+            for(iSPx = 0; iSPx<iSPSet.size(); iSPx++){
+               for(iSFx = 0; iSFx<iSFSet.size(); iSFx++){
+                  for(iSPix = 0; iSPix<iSPiSet.size(); iSPix++){
+                     for(n=1; n<=pigs; n++){
+                        if( ( (s==1) || (s==2) ) & (n!=pigs) ) continue;
+                        iTP = iTPSet[iTPx]; iSP = iSPSet[iSPx]; iSF = iSFSet[iSFx]; iSPi = iSPiSet[iSPix];
+                        label = getLabel(iTP,iSP,iFeed,iSF,iSPi,n,s);
+                        w.State(label);
+                        
+                        // continue action
+                        if ( (s!=lastStage) ){
+                           pr.clear(); index.clear(); scope.clear();
+                           label = getLabel(iTP,iSP,iSF,iSPi,n,s+1);
+                           idN = mapL2DF[label];
+                           // DBG4(" con. " <<" idNx: " <<idN<< " n: "<< n << " s: " << s << " label: " << label <<endl)
+                           scope.assign(1,1);
+                           pr.assign(1,1);
+                           index.assign(1,idN);
+                           weights.assign(2,0);
+                           cull=0;
+                           if(s==1){
+                              weights[0] = tStartMarketing - 1;
+                           }
+                           if(s!=1){
+                              weights[0] = 1;
+                           }                                  
+                           weights[1]=weightCull[s][cull][iTP][iFeed][n];
+                           w.Action(scope, index, pr, weights, "cont.", true);
+                        }
+                        
+                        //Individual marketing actions
+                        if ( (s>=2) & (s!=lastStage) & (n>minMarketingSize) ){
+                           for (cull=1; cull<=n; cull++) {
+                              pr.clear(); index.clear(); scope.clear();
+                              if(cull != n) {  // have not culled all pigs
+                                 nN = n - cull;
+                                 label = getLabel(iTP,iSP,iSF,iSPi,nN,s+1);
+                                 idN = mapL2DF[label];
+                                 scope.assign(1,1);
+                                 pr.assign(1,1);
+                                 index.assign(1,idN);
+                                 weights.assign(2,0);
+                                 weights[0]=1;
+                                 weights[1]=weightCull[s][cull][iTP][iFeed][n];
+                              }else{  // cull all pigs
+                                 scope.assign(1,0);
+                                 pr.assign(1,1);
+                                 index.assign(1,0);
+                                 weights.assign(2,0);
+                                 weights[0]=1;
+                                 weights[1]=weightCull[s][cull][iTP][iFeed][n];
+                              }
+                              label = ToString<double>(cull);
+                              w.Action(scope, index, pr, weights, label, true);
+                           }                                     
+                        }
+                        
+                        // terminate action at the last satge 
+                        if( s==lastStage ){
+                           pr.clear(); index.clear(); scope.clear();
+                           cull = n; 
+                           scope.assign(1,0);
+                           pr.assign(1,1);
+                           index.assign(1,0);
+                           weights.assign(2,0);
+                           weights[0]=1;
+                           weights[1]=weightCull[s][cull][iTP][iFeed][n];
+                           w.Action(scope, index, pr, weights, "term.", true);
+                        }
+                        w.EndState();
+                     }
+                  }
+               }
+            }
+         }
+         w.EndStage();
+      }
+      w.EndProcess(); // end level
+}
+
+
+
+
+
+void HMDP2::BuildMapL2VectorDeterministicpPriceFixed(int stage) {   //  mapL2Vector[iTP][iSP][iSF][iSPi][n]
+
+   int ss, n, iTP, iSP, iSF, iSPi, idL2;
+   int iTPx, iSPx, iSFx, iSPix;
+   vector<int> iTPSet, iSPSet, iSFSet, iSPiSet;
+   
+   iTPSet.clear(); iSPSet.clear(); iSFSet.clear(); iSPiSet.clear();
+   for(ss=1; ss<=stage; ss++){
+      iTPSet.push_back(sample_path(ss-1,1));
+      iSPSet.push_back(sample_path(ss-1,2));
+      iSFSet.push_back(sample_path(ss-1,4));
+      iSPiSet.push_back(sample_path(ss-1,5));
+   }
+   
+   idL2=0;
+   for(iTPx = 0; iTPx<iTPSet.size(); iTPx++){
+      for(iSPx = 0; iSPx<iSPSet.size(); iSPx++){
+         for(iSFx = 0; iSFx<iSFSet.size(); iSFx++){
+            for(iSPix = 0; iSPix<iSPiSet.size(); iSPix++){
+               for(n=1; n<=pigs; n++){
+                  if( ( (stage==1) || (stage==2) ) & (n!=pigs) ) continue;
+                  iTP = iTPSet[iTPx]; iSP = iSPSet[iSPx]; iSF = iSFSet[iSFx]; iSPi = iSPiSet[iSPix];
+                  label = getLabel(iTP,iSP,iSF,iSPi,n,stage);
+                  mapL2DF[label] = idL2;
+                  idL2++;
+               }
+            }
+         }
+      }
+   }
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+}
+
